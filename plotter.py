@@ -55,14 +55,14 @@ sepnorm_str = "True" if sepnorm else "False"
 # Build the filename dynamically
 redshift_info = f"zmin_{zmin:.1f}_zmax_{zmax:.1f}"
 if data_type == "data":
-    type_info = "data"
+    type_info = "Data"
 elif data_type == "mock":
-    type_info = "mock"
-else:
-    type_info = "unknown"
+    type_info = "Mock"
+elif data_type == "abacus":
+    type_info = "Abacus"
 
 # Overall title
-overall_title = (f"Type: {type_info}, zmin: {zmin:.1f}, zmax: {zmax:.1f}, "
+overall_title = (f"{type_info}, zmin: {zmin:.1f}, zmax: {zmax:.1f}, "
                  f"Apodization Scale: {ap_scale}, Completeness: {comp_s:.2f}, "
                  f"Sepnorm: {sepnorm_str}")
 
