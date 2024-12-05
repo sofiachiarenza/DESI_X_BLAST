@@ -9,94 +9,114 @@ from astropy.io import fits
 import time
 from astropy.coordinates import SkyCoord
 from astropy import units as u
+import yaml
 import sys
 
 from functions_AT_new import *
 
-
 print('=== COMPUTE CELL ===')
 
-#HEALPix map resolution
+# HEALPix map resolution
 nside = 2048
 
+# Paths
 PATH_d = '/global/cfs/cdirs/desi/users/akrolew/QSO_maps/' # path for desi data
 PATH_m = '/global/cfs/cdirs/desi/users/akrolew/QSO_maps/' # path for mocks
 PATH_p = '/pscratch/sd/r/rmvd2/CMBxLya/data/COM_Lensing_4096_R3.00/' # path for planck data
-abacus_dir ='/global/cfs/cdirs/desi/users/akrolew/AbacusSummit_huge_c000_ph201_QSO/data/'
+abacus_dir = '/global/cfs/cdirs/desi/users/akrolew/AbacusSummit_huge_c000_ph201_QSO/data/'
 
 PATH_of = '/global/homes/s/schiaren/CMBxQSO/results/plots'
 PATH_oc = '/global/homes/s/schiaren/CMBxQSO/results'
 
-data_type = str(sys.argv[1])
+# Load configuration file
+config_file = 'config.yaml'
+with open(config_file, 'r') as file:
+    config = yaml.safe_load(file)
+
+data_type = config['data_type']
 
 if data_type == 'data':
-    # read DESI DR1 data
-    zmin = float(sys.argv[2]) # zmin
-    zmax = float(sys.argv[3]) # zmax
-    version = 'v1.5' #Krolewski generated DESI DR1 data 29072024
-    # lensing_str='PR3'
-    lensing_str='PR4'
+    zmin = config['data']['zmin']
+    zmax = config['data']['zmax']
+    lensing_str = config['data']['lensing_str']
+    version = 'v1.5'
+    data_str = f'desi_dr1_{zmin:.2f}_z_{zmax:.2f}_{lensing_str}_PR4mask'
     print(f'use Planck {lensing_str}')
-    data_str=f'desi_dr1_{zmin:.2f}_z_{zmax:.2f}_{lensing_str}_PR4mask'
 
 elif data_type == 'mock':
-    ######read Gaussian mocks
-    i_min = int(sys.argv[2]) # first mock
-    i_max = int(sys.argv[3]) # last mock
-    # version = 'v1.1' #--> old version pre June 24 2024
-    version = 'v1.2' #Krolewski generated new Gaussian mocks
-    mock_version = '_v2'# Krolewski generated new Gaussian mocks with correct dNdz splining and magnification bias--> use these
-    add_nlqq=True
-    data_str='gaussian_mocks'
+    i_min = config['mock']['i_min']
+    i_max = config['mock']['i_max']
+    version = config['mock']['version']
+    mock_version = config['mock']['mock_version']
+    add_nlqq = config['mock']['add_nlqq']
+    data_str = 'gaussian_mocks'
     if add_nlqq:
         data_str += f'_nlqq{mock_version}'
-        print("INLCUDE NOISE FOR GAUSSIAN MOCKS")
+        print("INCLUDE NOISE FOR GAUSSIAN MOCKS")
 
-elif 'abacus' in data_type:
-    ######read Abacus mocks
-    i_min = int(sys.argv[2]) # first mock
-    i_max = int(sys.argv[3]) # last mock
-    version='v1.5'
-    data_str=data_type
+elif data_type == 'abacus':
+    i_min = config['abacus']['i_min']
+    i_max = config['abacus']['i_max']
+    version = config['abacus']['version']
+    data_str = f'abacus_mock_{i_min}_to_{i_max}'
+    print(f'Processing Abacus mocks from {i_min} to {i_max}')
 
-ap_scale = float(sys.argv[4]) # apodization scale in degrees
-comp_s = float(sys.argv[5]) # completeness
-cut_off = float(sys.argv[6]) # cut off for completeness mask * binary mask
-filter_lowell_alm = sys.argv[7].lower() in ['true', '1', 't', 'y', 'yes']
-filter_highell_alm = sys.argv[8].lower() in ['true', '1', 't', 'y', 'yes']
+ap_scale = config['mask']['ap_scale']
+comp_s = config['mask']['completeness']
+cut_off = config['mask']['cut_off']
+mask_name = config['mask']['mask_name']
 
-mask_name = sys.argv[9] # N: NGC, S: SGC, A: NGC+SGC
+filter_lowell_alm = config['filter']['lowell_alm']
+filter_highell_alm = config['filter']['highell_alm']
 
-sepnorm = True
-sys_wts = True # if True: data with systematics
-do_cov = True # update theory paths as well
-compute_cl = True
-compute_coupled_cls = False
-coupled_str=''
-if compute_coupled_cls: coupled_str='coupled_'
-compute_field = True # (usually) should be True if compute_cl is True
+sepnorm = config['computation']['sepnorm']
+sys_wts = config['computation']['sys_wts']
+do_cov = config['computation']['do_cov']
+compute_cl = config['computation']['compute_cl']
+compute_coupled_cls = config['computation']['compute_coupled_cls']
+compute_field = config['computation']['compute_field']
 
-filter_str=''
+compute_lmin = config['computation']['lmin']
+binsize = config['computation']['binsize']
+
+# Set up filters
+filter_str = ''
 if filter_lowell_alm:
     filter_str = '_filter_lowell'
 if filter_highell_alm:
     filter_str += '_filter_highell'
 
-if sepnorm:
-    sepnorm_str = 'True'
-else:
-    sepnorm_str = 'False'
+sepnorm_str = 'True' if sepnorm else 'False'
 
-compute_lmin = 5
-binsize = int(sys.argv[10])
+# Set up data string
+if data_type == 'data':
+    version = 'v1.5'
+    data_str = f'desi_dr1_{zmin:.2f}_z_{zmax:.2f}_{lensing_str}_PR4mask'
+    print(f'use Planck {lensing_str}')
 
+elif data_type == 'mock':
+    version = 'v1.2'
+    mock_version = '_v2'
+    add_nlqq = True
+    data_str = 'gaussian_mocks'
+    if add_nlqq:
+        data_str += f'_nlqq{mock_version}'
+        print("INCLUDE NOISE FOR GAUSSIAN MOCKS")
+
+elif 'abacus' in data_type:
+    version = 'v1.5'
+    data_str = data_type
+
+# Options and output strings
 opt_ = f''
 opt1 = f'_{version}_lmax6144_mbinary'
 opt2 = f'_{version}_lmax6144_mcompleteness'
 opt3 = f'_{version}_lmax6144_mapC2s{ap_scale}{filter_str}_comp{comp_s:.1f}_cutoff{cut_off:.1f}_{data_str}_lmin{compute_lmin:.0f}_binsize{binsize:.0f}_sepnorm{sepnorm_str}'
 
+# Print summary
 print('REGION:          ', mask_name)
-print('number of mocks: ', i_max) if data_type == 'mock' or 'abacus' in data_type else None
+if data_type in ['mock', 'abacus']:
+    print('number of mocks: ', config['data']['i_max'])
 print('apo scale (deg): ', ap_scale)
 print('cut off mask:    ', cut_off)
 print('data set :       ', data_str)
