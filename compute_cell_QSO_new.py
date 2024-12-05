@@ -24,8 +24,8 @@ PATH_m = '/global/cfs/cdirs/desi/users/akrolew/QSO_maps/' # path for mocks
 PATH_p = '/pscratch/sd/r/rmvd2/CMBxLya/data/COM_Lensing_4096_R3.00/' # path for planck data
 abacus_dir ='/global/cfs/cdirs/desi/users/akrolew/AbacusSummit_huge_c000_ph201_QSO/data/'
 
-PATH_of = '/global/homes/s/schiaren/CMBxQSO/results/plots/'
-PATH_oc = '/global/homes/s/schiaren/CMBxQSO/results/'
+PATH_of = '/global/homes/s/schiaren/CMBxQSO/results/plots'
+PATH_oc = '/global/homes/s/schiaren/CMBxQSO/results'
 
 data_type = str(sys.argv[1])
 
