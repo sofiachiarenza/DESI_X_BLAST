@@ -47,18 +47,24 @@ zmin = config['data']['zmin']
 zmax = config['data']['zmax']
 lmin = config['computation']['lmin']
 binsize = config['computation']['binsize']
+sepnorm = config['computation']['sepnorm']
+
+# Convert sepnorm to string for filename and title
+sepnorm_str = "True" if sepnorm else "False"
 
 # Build the filename dynamically
 redshift_info = f"zmin_{zmin:.1f}_zmax_{zmax:.1f}"
 if data_type == "data":
-    type_info = "Data"
+    type_info = "data"
 elif data_type == "mock":
-    type_info = "Mock"
-elif data_type == "abacus":
-    type_info = "Abacus"
+    type_info = "mock"
+else:
+    type_info = "unknown"
 
 # Overall title
-overall_title = (f"{type_info} in {zmin:.1f} < z < {zmax:.1f}, Apodization Scale: {ap_scale}, Completeness: {comp_s:.2f}")
+overall_title = (f"Type: {type_info}, zmin: {zmin:.1f}, zmax: {zmax:.1f}, "
+                 f"Apodization Scale: {ap_scale}, Completeness: {comp_s:.2f}, "
+                 f"Sepnorm: {sepnorm_str}")
 
 # File paths and titles for measured data
 file_paths = [
@@ -128,7 +134,7 @@ axs[1, 1].legend(loc="best", fontsize=10)
 fig.suptitle(overall_title, fontsize=16, y=0.98)
 
 # Adjust layout and dynamically save the figure
-output_plot_path = f"results/plots/Cls_{type_info}_{redshift_info}_ap{ap_scale}_comp{comp_s:.2f}.pdf"
+output_plot_path = f"results/plots/Cls_{type_info}_{redshift_info}_ap{ap_scale}_comp{comp_s:.2f}_{sepnorm_str}.pdf"
 plt.tight_layout(rect=[0, 0, 1, 0.96])  # Adjust layout to accommodate the overall title
 plt.savefig(output_plot_path, format="pdf")
 plt.show()
