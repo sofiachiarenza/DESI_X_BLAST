@@ -41,7 +41,6 @@ if data_type == 'data':
     lensing_str = config['data']['lensing_str']
     version = 'v1.5'
     data_str = f'desi_dr1_{zmin:.2f}_z_{zmax:.2f}_{lensing_str}_PR4mask'
-    print(f'use Planck {lensing_str}')
 
 elif data_type == 'mock':
     i_min = config['mock']['i_min']
@@ -74,6 +73,8 @@ sys_wts = config['computation']['sys_wts']
 do_cov = config['computation']['do_cov']
 compute_cl = config['computation']['compute_cl']
 compute_coupled_cls = config['computation']['compute_coupled_cls']
+coupled_str=''
+if compute_coupled_cls: coupled_str='coupled_'
 compute_field = config['computation']['compute_field']
 
 compute_lmin = config['computation']['lmin']
