@@ -62,7 +62,7 @@ opt3 = f'_{version}_lmax6144_mapC2s{ap_scale}{filter_str}_comp{comp_s:.1f}_cutof
 file_paths = [
     f"results/Clkg_{mask_name}{opt3}.txt",
     f"results/Clgg_{mask_name}{opt3}.txt",
-    f"results/Clkk_{mask_name}{opt3}.txt"
+    f"results/Clkk_A_v1.5_lmax6144_mbinary.txt"
 ]
 titles = [
     r"$C_\ell^{\kappa g}$",
