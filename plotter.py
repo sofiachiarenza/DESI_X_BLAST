@@ -52,25 +52,18 @@ sepnorm = config['computation']['sepnorm']
 # Convert sepnorm to string for filename and title
 sepnorm_str = "True" if sepnorm else "False"
 
-# Build the filename dynamically
-redshift_info = f"zmin_{zmin:.1f}_zmax_{zmax:.1f}"
-if data_type == "data":
-    type_info = "Data"
-elif data_type == "mock":
-    type_info = "Mock"
-elif data_type == "abacus":
-    type_info = "Abacus"
+# Construct file naming components dynamically
+version = 'v1.5'
+lensing_str = config['data']['lensing_str'] if data_type == "data" else ''
+data_str = f'desi_dr1_{zmin:.2f}_z_{zmax:.2f}_{lensing_str}_PR4mask' if data_type == "data" else 'mock_or_abacus_placeholder'
+filter_str = ""  # Add filtering options dynamically if applicable
+opt3 = f'_{version}_lmax6144_mapC2s{ap_scale:.2f}{filter_str}_comp{comp_s:.1f}_cutoff{comp_s:.1f}_{data_str}_lmin{lmin}_binsize{binsize}_sepnorm{sepnorm_str}'
 
-# Overall title
-overall_title = (f"{type_info}, zmin: {zmin:.1f}, zmax: {zmax:.1f}, "
-                 f"Apodization Scale: {ap_scale}, Completeness: {comp_s:.2f}, "
-                 f"Sepnorm: {sepnorm_str}")
-
-# File paths and titles for measured data
+# Dynamically generated file paths based on config
 file_paths = [
-    "results/Clkg_A_v1.5_lmax6144_mapC2s0.05_comp0.2_cutoff0.2_desi_dr1_0.80_z_2.10_PR4_PR4mask_lmin5_binsize5_sepnormTrue.txt",
-    "results/Clgg_A_v1.5_lmax6144_mapC2s0.05_comp0.2_cutoff0.2_desi_dr1_0.80_z_2.10_PR4_PR4mask_lmin5_binsize5_sepnormTrue.txt",
-    "results/Clkk_A_v1.5_lmax6144_mbinary.txt"
+    f"results/Clkg_{mask_name}{opt3}.txt",
+    f"results/Clgg_{mask_name}{opt3}.txt",
+    f"results/Clkk_{mask_name}{opt3}.txt"
 ]
 titles = [
     r"$C_\ell^{\kappa g}$",
@@ -80,9 +73,8 @@ titles = [
 colors = ['darkorange', 'navy', '#FF00FF']
 
 # Load theoretical data and unpack columns
-lbin_theory, Cl_theory_kk, Cl_theory_kg, Cl_theory_gg = np.loadtxt(
-    "results/binned_theory_Cl_kk_kg_gg_lmin5.txt", unpack=True
-)
+theory_file_path = f"results/binned_theory_Cl_kk_kg_gg_lmin{lmin}.txt"
+lbin_theory, Cl_theory_kk, Cl_theory_kg, Cl_theory_gg = np.loadtxt(theory_file_path, unpack=True)
 
 # Apply mask for l_cut to theoretical data
 l_cut = 105
@@ -94,6 +86,11 @@ Cl_theory_gg = Cl_theory_gg[mask2]
 
 # Map theoretical data to respective measurements
 theory_columns = [Cl_theory_kg, Cl_theory_gg, Cl_theory_kk]
+
+# Overall title
+overall_title = (f"{data_type.capitalize()}, Mask: {mask_name}, zmin: {zmin:.1f}, zmax: {zmax:.1f}, "
+                 f"Apodization Scale: {ap_scale:.2f}, Completeness: {comp_s:.2f}, "
+                 f"Sepnorm: {sepnorm_str}")
 
 # Create figure with 2x2 subplots
 fig, axs = plt.subplots(2, 2, figsize=(12, 10))
@@ -134,7 +131,7 @@ axs[1, 1].legend(loc="best", fontsize=10)
 fig.suptitle(overall_title, fontsize=16, y=0.98)
 
 # Adjust layout and dynamically save the figure
-output_plot_path = f"results/plots/Cls_{type_info}_{redshift_info}_ap{ap_scale}_comp{comp_s:.2f}_sepnorm{sepnorm_str}.pdf"
+output_plot_path = f"results/plots/Cls_{mask_name}_{data_type}_ap{ap_scale:.2f}_comp{comp_s:.2f}_sep{sepnorm_str}.pdf"
 plt.tight_layout(rect=[0, 0, 1, 0.96])  # Adjust layout to accommodate the overall title
 plt.savefig(output_plot_path, format="pdf")
 plt.show()
