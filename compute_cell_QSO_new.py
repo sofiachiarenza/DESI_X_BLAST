@@ -181,6 +181,7 @@ if data_type == 'data':
         numcounts_map_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
         numcounts_map_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
         numcounts_map_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
+        numcounts_map_S = numcounts_map_S_DES + numcounts_map_S_NGCnoDES + numcounts_map_S_SGCnoDES
     elif (sys_wts == False):
         numcounts_map_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP_UNW.fits', field=[0])
         numcounts_map_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP_UNW.fits', field=[0])
@@ -194,7 +195,7 @@ if data_type == 'data':
         keep_bin_mask = (bin_mask>cut_off)
         bin_mask[keep_bin_mask] = True
     if mask_name == 'A':
-        numcounts_map = numcounts_map_N + numcounts_map_S
+        numcounts_map = numcounts_map_N + numcounts_map_S 
         overlap = (completeness_S/cut_off) & (ran_map_N/ran_mean_N>cut_off)
         bin_mask = np.full(bin_mask_S.shape, False)
         keep_bin_mask = (bin_mask_N>cut_off) | (bin_mask_S>cut_off)
