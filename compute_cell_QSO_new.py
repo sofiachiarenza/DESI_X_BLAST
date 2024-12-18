@@ -196,7 +196,7 @@ if data_type == 'data':
         bin_mask[keep_bin_mask] = True
     if mask_name == 'A':
         numcounts_map = numcounts_map_N + numcounts_map_S 
-        overlap = (completeness_S/cut_off) & (ran_map_N/ran_mean_N>cut_off)
+        overlap = (completeness_S>cut_off) & (ran_map_N/ran_mean_N>cut_off)
         bin_mask = np.full(bin_mask_S.shape, False)
         keep_bin_mask = (bin_mask_N>cut_off) | (bin_mask_S>cut_off)
         bin_mask[keep_bin_mask] = True
