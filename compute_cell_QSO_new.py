@@ -89,6 +89,7 @@ if filter_highell_alm:
     filter_str += '_filter_highell'
 
 sepnorm_str = 'True' if sepnorm else 'False'
+extrasepnorm_str = 'old' if extrasepnorm else 'False'
 
 # Set up data string
 if data_type == 'data':
@@ -113,7 +114,7 @@ elif 'abacus' in data_type:
 opt_ = f''
 opt1 = f'_{version}_lmax6144_mbinary'
 opt2 = f'_{version}_lmax6144_mcompleteness'
-opt3 = f'_{version}_lmax6144_mapC2s{ap_scale}{filter_str}_comp{comp_s:.1f}_cutoff{cut_off:.1f}_{data_str}_lmin{compute_lmin:.0f}_binsize{binsize:.0f}_sepnorm{sepnorm_str}'
+opt3 = f'_{version}_lmax6144_mapC2s{ap_scale}{filter_str}_comp{comp_s:.1f}_cutoff{cut_off:.1f}_{data_str}_lmin{compute_lmin:.0f}_binsize{binsize:.0f}_sepnorm{sepnorm_str}_{extrasepnorm_str}'
 
 # Print summary
 print('REGION:          ', mask_name)
