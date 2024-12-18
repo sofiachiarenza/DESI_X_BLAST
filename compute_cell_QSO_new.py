@@ -147,14 +147,40 @@ if data_type == 'data':
     ran_map_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
     ran_mean_N = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
     completeness_N = ran_map_N/ran_mean_N
-    masked_count_dn_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
+    """masked_count_dn_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
     bin_mask_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
     ran_map_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
     ran_mean_S = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
-    completeness_S = ran_map_S/ran_mean_S
+    completeness_S = ran_map_S/ran_mean_S"""
+    #STEP 1: S-DES
+    masked_count_dn_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
+    bin_mask_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
+    ran_map_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
+    ran_mean_S_DES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
+    completeness_S_DES = ran_map_S_DES/ran_mean_S_DES
+    #STEP 2: S-SGCnoDES
+    masked_count_dn_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
+    bin_mask_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
+    ran_map_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
+    ran_mean_S_SGCnoDES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
+    completeness_S_SGCnoDES = ran_map_S_SGCnoDES/ran_mean_S_SGCnoDES
+    #STEP 2: S-NGCnoDES
+    masked_count_dn_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
+    bin_mask_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
+    ran_map_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
+    ran_mean_S_NGCnoDES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
+    completeness_S_NGCnoDES = ran_map_S_NGCnoDES/ran_mean_S_NGCnoDES
+
+    masked_count_dn_S = masked_count_dn_S_DES + masked_count_dn_S_SGCnoDES + masked_count_dn_S_NGCnoDES
+    bin_mask_S = bin_mask_S_DES + bin_mask_S_SGCnoDES + bin_mask_S_NGCnoDES
+    ran_map_S = ran_map_S_DES + ran_map_S_SGCnoDES + ran_map_S_NGCnoDES
+    completeness_S = completeness_S_DES + completeness_S_NGCnoDES + completeness_S_SGCnoDES
+
     if sys_wts:
         numcounts_map_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
-        numcounts_map_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
+        numcounts_map_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
+        numcounts_map_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
+        numcounts_map_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
     elif (sys_wts == False):
         numcounts_map_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP_UNW.fits', field=[0])
         numcounts_map_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP_UNW.fits', field=[0])
@@ -169,7 +195,7 @@ if data_type == 'data':
         bin_mask[keep_bin_mask] = True
     if mask_name == 'A':
         numcounts_map = numcounts_map_N + numcounts_map_S
-        overlap = (ran_map_S/ran_mean_S>cut_off) & (ran_map_N/ran_mean_N>cut_off)
+        overlap = (completeness_S/cut_off) & (ran_map_N/ran_mean_N>cut_off)
         bin_mask = np.full(bin_mask_S.shape, False)
         keep_bin_mask = (bin_mask_N>cut_off) | (bin_mask_S>cut_off)
         bin_mask[keep_bin_mask] = True
