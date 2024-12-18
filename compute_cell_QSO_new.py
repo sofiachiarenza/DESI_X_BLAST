@@ -89,7 +89,7 @@ if filter_highell_alm:
     filter_str += '_filter_highell'
 
 sepnorm_str = 'True' if sepnorm else 'False'
-extrasepnorm_str = 'old' if extrasepnorm else 'False'
+extrasepnorm_str = 'new' if extrasepnorm else 'old'
 
 # Set up data string
 if data_type == 'data':
