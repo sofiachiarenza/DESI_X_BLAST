@@ -49,16 +49,18 @@ zmax = config['data']['zmax']
 lmin = config['computation']['lmin']
 binsize = config['computation']['binsize']
 sepnorm = config['computation']['sepnorm']
+extrasepnorm = config['computation']['extrasepnorm']
 
 # Convert sepnorm to string for filename and title
 sepnorm_str = "True" if sepnorm else "False"
+extrasepnorm_str = "new" if extrasepnorm else "old"
 
 # Dynamically generated file paths based on config
 version = 'v1.5'
 lensing_str = config['data'].get('lensing_str', 'PR4') if data_type == "data" else ''
 data_str = f'desi_dr1_{zmin:.2f}_z_{zmax:.2f}_{lensing_str}_PR4mask' if data_type == "data" else 'mock_or_abacus_placeholder'
 filter_str = ""  # Add filtering options dynamically if applicable
-opt3 = f'_{version}_lmax6144_mapC2s{ap_scale}{filter_str}_comp{comp_s:.1f}_cutoff{cut_off:.1f}_{data_str}_lmin{lmin}_binsize{binsize}_sepnorm{sepnorm_str}'
+opt3 = f'_{version}_lmax6144_mapC2s{ap_scale}{filter_str}_comp{comp_s:.1f}_cutoff{cut_off:.1f}_{data_str}_lmin{lmin}_binsize{binsize}_sepnorm{sepnorm_str}_{extrasepnorm_str}'
 
 file_paths = [
     f"results/Clkg_{mask_name}{opt3}.txt",
@@ -90,7 +92,7 @@ theory_columns = [Cl_theory_kg, Cl_theory_gg, Cl_theory_kk]
 # Overall title
 overall_title = (f"{data_type.capitalize()}, Mask: {mask_name}, zmin: {zmin:.1f}, zmax: {zmax:.1f}, "
                  f"Apodization Scale: {ap_scale:.2f}, Completeness: {comp_s:.2f}, "
-                 f"Sepnorm: {sepnorm_str}")
+                 f"Sepnorm: {sepnorm_str}, {sepnorm_str}")
 
 # Create figure with 2x2 subplots
 fig, axs = plt.subplots(2, 2, figsize=(12, 10))
@@ -131,7 +133,7 @@ axs[1, 1].legend(loc="best", fontsize=10)
 fig.suptitle(overall_title, fontsize=16, y=0.98)
 
 # Adjust layout and dynamically save the figure
-output_plot_path = f"results/plots/Cls_zmin{zmin}_zmax{zmax}_{mask_name}_v1.5_ap{ap_scale}_comp{comp_s}_sep{sepnorm_str}.pdf"
+output_plot_path = f"results/plots/Cls_zmin{zmin}_zmax{zmax}_{mask_name}_v1.5_ap{ap_scale}_comp{comp_s}_sep{sepnorm_str}_{extrasepnorm_str}.pdf"
 plt.tight_layout(rect=[0, 0, 1, 0.96])  # Adjust layout to accommodate the overall title
 plt.savefig(output_plot_path, format="pdf")
 plt.show()
