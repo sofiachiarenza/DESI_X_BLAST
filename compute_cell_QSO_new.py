@@ -69,6 +69,7 @@ filter_lowell_alm = config['filter']['lowell_alm']
 filter_highell_alm = config['filter']['highell_alm']
 
 sepnorm = config['computation']['sepnorm']
+extrasepnorm = config['computation']['extrasepnorm']
 sys_wts = config['computation']['sys_wts']
 do_cov = config['computation']['do_cov']
 compute_cl = config['computation']['compute_cl']
@@ -147,34 +148,37 @@ if data_type == 'data':
     ran_map_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
     ran_mean_N = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
     completeness_N = ran_map_N/ran_mean_N
-    """masked_count_dn_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
-    bin_mask_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
-    ran_map_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
-    ran_mean_S = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
-    completeness_S = ran_map_S/ran_mean_S"""
-    #STEP 1: S-DES
-    masked_count_dn_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
-    bin_mask_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
-    ran_map_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
-    ran_mean_S_DES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
-    completeness_S_DES = ran_map_S_DES/ran_mean_S_DES
-    #STEP 2: S-SGCnoDES
-    masked_count_dn_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
-    bin_mask_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
-    ran_map_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
-    ran_mean_S_SGCnoDES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
-    completeness_S_SGCnoDES = ran_map_S_SGCnoDES/ran_mean_S_SGCnoDES
-    #STEP 2: S-NGCnoDES
-    masked_count_dn_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
-    bin_mask_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
-    ran_map_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
-    ran_mean_S_NGCnoDES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
-    completeness_S_NGCnoDES = ran_map_S_NGCnoDES/ran_mean_S_NGCnoDES
 
-    masked_count_dn_S = masked_count_dn_S_DES + masked_count_dn_S_SGCnoDES + masked_count_dn_S_NGCnoDES
-    bin_mask_S = bin_mask_S_DES + bin_mask_S_SGCnoDES + bin_mask_S_NGCnoDES
-    ran_map_S = ran_map_S_DES + ran_map_S_SGCnoDES + ran_map_S_NGCnoDES
-    completeness_S = completeness_S_DES + completeness_S_NGCnoDES + completeness_S_SGCnoDES
+    if extrasepnorm == False:
+        masked_count_dn_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
+        bin_mask_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
+        ran_map_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
+        ran_mean_S = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
+        completeness_S = ran_map_S/ran_mean_S
+    else:  
+        #STEP 1: S-DES
+        masked_count_dn_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
+        bin_mask_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
+        ran_map_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
+        ran_mean_S_DES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
+        completeness_S_DES = ran_map_S_DES/ran_mean_S_DES
+        #STEP 2: S-SGCnoDES
+        masked_count_dn_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
+        bin_mask_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
+        ran_map_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
+        ran_mean_S_SGCnoDES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
+        completeness_S_SGCnoDES = ran_map_S_SGCnoDES/ran_mean_S_SGCnoDES
+        #STEP 2: S-NGCnoDES
+        masked_count_dn_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
+        bin_mask_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
+        ran_map_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
+        ran_mean_S_NGCnoDES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
+        completeness_S_NGCnoDES = ran_map_S_NGCnoDES/ran_mean_S_NGCnoDES
+
+        masked_count_dn_S = masked_count_dn_S_DES + masked_count_dn_S_SGCnoDES + masked_count_dn_S_NGCnoDES
+        bin_mask_S = bin_mask_S_DES + bin_mask_S_SGCnoDES + bin_mask_S_NGCnoDES
+        ran_map_S = ran_map_S_DES + ran_map_S_SGCnoDES + ran_map_S_NGCnoDES
+        completeness_S = completeness_S_DES + completeness_S_NGCnoDES + completeness_S_SGCnoDES
 
     if sys_wts:
         numcounts_map_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])

@@ -33,6 +33,7 @@ filter:
 # Computation options
 computation:
   sepnorm: true      # Normalization: separate or global normalization
+  extrasepnorm: true # additionally divide S in S-DES and S-noDES
   sys_wts: true      # Use data with systematics
   do_cov: true       # Update theory paths
   compute_cl: true   # Compute angular power spectrum
