@@ -125,7 +125,7 @@ mask_pl = hp.read_map(f'/pscratch/sd/r/rmvd2/CMBxLya/data/COM_Lensing_4096_R3.00
 
 comp ='{:.2f}'.format(comp_s)
 if data_type == 'data':
-    masked_count_dn_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits', ignore_missing_simple=True) #Directly read delta_map
+    masked_count_dn_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
     bin_mask_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
     ran_map_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
     ran_mean_N = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
