@@ -261,6 +261,8 @@ if data_type == 'data':
         completeness[completeness < cut_off] = 0
 
         print("SHOTNOISE TEST\n")
+        print(np.sum(numcounts_map))
+        print(np.sum(completeness))
         print(np.sum(numcounts_map)/np.sum(completeness))
 
 
