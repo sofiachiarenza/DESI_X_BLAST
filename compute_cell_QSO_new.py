@@ -256,7 +256,12 @@ if data_type == 'data':
         completeness = ran_map / ran_mean_S_DES
         completeness = completeness * bin_mask.astype(np.float64)
         completeness[completeness < cut_off] = 0
-        
+
+        print("SHOTNOISE TEST\n")
+        print("ratio:\t", np.sum(masked_count_dn[bin_mask])/np.sum(completeness))
+        print("pixel area:\t", hp.pixelfunc.nside2pixarea(nside))
+        print("number counts:\t", np.sum(masked_count_dn[bin_mask])/(np.sum(completeness)*hp.pixelfunc.nside2pixarea(nside)))
+
         """plt.figure()
         hp.mollview(bin_mask, title='bin_mask')
         plt.savefig(f'results/plots/bin_mask{opt3}.pdf')
