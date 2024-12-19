@@ -260,7 +260,7 @@ if data_type == 'data':
         print("SHOTNOISE TEST\n")
         print("ratio:\t", np.sum(masked_count_dn[bin_mask])/np.sum(completeness))
         print("pixel area:\t", hp.pixelfunc.nside2pixarea(nside, degrees=True))
-        print("number counts:\t", np.sum(masked_count_dn[bin_mask])/(np.sum(completeness)*hp.pixelfunc.nside2pixarea(nside)))
+        print("number counts:\t", np.sum(masked_count_dn[bin_mask])/(np.sum(completeness)*hp.pixelfunc.nside2pixarea(nside, degrees=True)))
 
         """plt.figure()
         hp.mollview(bin_mask, title='bin_mask')
