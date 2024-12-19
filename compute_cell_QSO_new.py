@@ -274,6 +274,10 @@ if data_type == 'data':
     completeness = completeness*bin_mask.astype(np.float64) 
     completeness[completeness<cut_off] = 0
 
+    plt.figure();hp.mollview(bin_mask, title='bin_mask');plt.savefig(f'plots/bin_mask{opt3}.pdf')
+    plt.figure();hp.mollview(completeness, title='comp_mask');plt.savefig(f'plots/comp_mask{opt3}.pdf')
+    plt.figure(); plt.hist(completeness[completeness>0], bins=100); plt.savefig(f'plots/comp_hist{opt3}.pdf')
+
     #use the numbercount maps to compute deltas
     if sepnorm == False:
         data_map = numcounts_map / completeness
