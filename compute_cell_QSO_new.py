@@ -231,21 +231,23 @@ if data_type == 'data':
     if mask_name == 'A':
         if extrasepnorm == False:
             numcounts_map = numcounts_map_N + numcounts_map_S 
-            overlap = (ran_map_S/ran_mean_S>cut_off) & (ran_map_N/ran_mean_N>cut_off)
+            overlap = (ran_map_S / ran_mean_S > cut_off) & (ran_map_N / ran_mean_N > cut_off)
             bin_mask = np.full(bin_mask_N.shape, False)
-            keep_bin_mask = (bin_mask_N>cut_off) | (bin_mask_S>cut_off)
+            keep_bin_mask = (bin_mask_N > cut_off) | (bin_mask_S > cut_off)
             bin_mask[keep_bin_mask] = True
-            masked_count_dn, ran_map, completeness = 1.*masked_count_dn_N, 1.*ran_map_N, 1.*completeness_N
-            masked_count_dn[masked_count_dn_S>-1] = masked_count_dn_S[masked_count_dn_S>-1]
-            ran_map[ran_map_S>cut_off] = ran_map_S[ran_map_S>cut_off]
-            completeness[ran_map_S>cut_off] = completeness_S[ran_map_S>cut_off]
+            masked_count_dn, ran_map, completeness = 1. * masked_count_dn_N, 1. * ran_map_N, 1. * completeness_N
+
+            masked_count_dn[masked_count_dn_S > -1] = masked_count_dn_S[masked_count_dn_S > -1]
+            ran_map[ran_map_S > cut_off] = ran_map_S[ran_map_S > cut_off]
+            completeness[ran_map_S > cut_off] = completeness_S[ran_map_S > cut_off]
+
         if extrasepnorm == True:
             numcounts_map = numcounts_map_N
-            overlap = completeness_N > cut_off
+            overlap = ran_map_N / ran_mean_N > cut_off
             bin_mask = np.full(bin_mask_N.shape, False)
-            keep_bin_mask = bin_mask_N>cut_off
+            keep_bin_mask = bin_mask_N > cut_off
             bin_mask[keep_bin_mask] = True
-            masked_count_dn, ran_map, completeness = 1.*masked_count_dn_N, 1.*ran_map_N, 1.*completeness_N
+            masked_count_dn, ran_map, completeness = 1. * masked_count_dn_N, 1. * ran_map_N, 1. * completeness_N
 
             for region in ["DES", "SGCnoDES", "NGCnoDES"]:
                 # Load the relevant data for this region
@@ -268,15 +270,28 @@ if data_type == 'data':
                 # Update masked_count_dn for the final map
                 valid_pixels = region_masked_count_dn > -1
                 masked_count_dn[valid_pixels] = region_masked_count_dn[valid_pixels]
-                ran_map[region_ran_map>cut_off] = region_ran_map[region_ran_map>cut_off]
-                completeness[region_ran_map>cut_off] = region_completeness[region_ran_map>cut_off]
- 
-    completeness = completeness*bin_mask.astype(np.float64) 
-    completeness[completeness<cut_off] = 0
+                
+                # Ensure ran_map and completeness are properly updated
+                ran_map[region_bin_mask > cut_off] = region_ran_map[region_bin_mask > cut_off]
+                completeness[region_bin_mask > cut_off] = region_completeness[region_bin_mask > cut_off]
 
-    plt.figure();hp.mollview(bin_mask, title='bin_mask');plt.savefig(f'results/plots/bin_mask{opt3}.pdf')
-    plt.figure();hp.mollview(completeness, title='comp_mask');plt.savefig(f'results/plots/comp_mask{opt3}.pdf')
-    plt.figure(); plt.hist(completeness[completeness>0], bins=100); plt.savefig(f'results/plots/comp_hist{opt3}.pdf')
+        completeness = ran_map / ran_mean_S_DES
+        completeness = completeness * bin_mask.astype(np.float64)
+        completeness[completeness < cut_off] = 0
+
+        # Debug plots
+        plt.figure()
+        hp.mollview(bin_mask, title='bin_mask')
+        plt.savefig(f'results/plots/bin_mask{opt3}.pdf')
+        
+        plt.figure()
+        hp.mollview(completeness, title='comp_mask')
+        plt.savefig(f'results/plots/comp_mask{opt3}.pdf')
+        
+        plt.figure()
+        plt.hist(completeness[completeness > 0], bins=100)
+        plt.savefig(f'results/plots/comp_hist{opt3}.pdf')
+
 
     #use the numbercount maps to compute deltas
     if sepnorm == False:
