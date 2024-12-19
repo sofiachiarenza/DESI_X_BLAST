@@ -260,6 +260,10 @@ if data_type == 'data':
         completeness = completeness * bin_mask.astype(np.float64)
         completeness[completeness < cut_off] = 0
 
+        print("SHOTNOISE TEST\n")
+        print(np.sum(numcounts_map)/np.sum(completeness))
+
+
         # Debug plots
         plt.figure()
         hp.mollview(bin_mask, title='bin_mask')
