@@ -256,15 +256,7 @@ if data_type == 'data':
         completeness = ran_map / ran_mean_S_DES
         completeness = completeness * bin_mask.astype(np.float64)
         completeness[completeness < cut_off] = 0
-
-        print("SHOTNOISE TEST\n")
-        print(np.sum(numcounts_map_S[numcounts_map_S>0]))
-        print(np.sum(numcounts_map_N[numcounts_map_N>0]))
-        print(np.sum(numcounts_map_S[numcounts_map_S>0]) + np.sum(numcounts_map_N[numcounts_map_N>0]))
-        print(np.sum(numcounts_map[bin_mask]))
-        print((np.sum(numcounts_map_S[numcounts_map_S>0]) + np.sum(numcounts_map_N[numcounts_map_N>0])/np.sum(ran_map)))
-
-
+        
         """plt.figure()
         hp.mollview(bin_mask, title='bin_mask')
         plt.savefig(f'results/plots/bin_mask{opt3}.pdf')
