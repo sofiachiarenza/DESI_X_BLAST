@@ -5,11 +5,12 @@ data:
   zmin: 0.8
   zmax: 2.1
   lensing_str: PR4  # Planck lensing version
+  version: v1.5     
 
 mock:
   i_min: 0          # First mock index
   i_max: 50         # Last mock index
-  version: v1.2     # Version for mock data
+  version: v1.5     # Version for mock data
   mock_version: _v2 # Specific version for mocks
   add_nlqq: true    # Include noise in Gaussian mocks
 

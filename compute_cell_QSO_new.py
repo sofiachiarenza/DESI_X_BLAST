@@ -39,8 +39,9 @@ if data_type == 'data':
     zmin = config['data']['zmin']
     zmax = config['data']['zmax']
     lensing_str = config['data']['lensing_str']
-    version = 'v1.5'
+    version = config['data']['version']
     data_str = f'desi_dr1_{zmin:.2f}_z_{zmax:.2f}_{lensing_str}_PR4mask'
+    print(f'use Planck {lensing_str}')
 
 elif data_type == 'mock':
     i_min = config['mock']['i_min']
@@ -91,25 +92,6 @@ if filter_highell_alm:
 sepnorm_str = 'True' if sepnorm else 'False'
 extrasepnorm_str = 'new' if extrasepnorm else 'old'
 
-# Set up data string
-if data_type == 'data':
-    version = 'v1.2'
-    data_str = f'desi_dr1_{zmin:.2f}_z_{zmax:.2f}_{lensing_str}_PR4mask'
-    print(f'use Planck {lensing_str}')
-
-elif data_type == 'mock':
-    version = 'v1.2'
-    mock_version = '_v2'
-    add_nlqq = True
-    data_str = 'gaussian_mocks'
-    if add_nlqq:
-        data_str += f'_nlqq{mock_version}'
-        print("INCLUDE NOISE FOR GAUSSIAN MOCKS")
-
-elif 'abacus' in data_type:
-    version = 'v1.5'
-    data_str = data_type
-
 # Options and output strings
 opt_ = f''
 opt1 = f'_{version}_lmax6144_mbinary'
@@ -139,7 +121,6 @@ t0 = time.time()
 # --------------------------------------------
 mask_pl = hp.read_map(f'/pscratch/sd/r/rmvd2/CMBxLya/data/COM_Lensing_4096_R3.00/mask.fits.gz')
 # mask_pl = hp.read_map(f'/global/homes/s/sferraro/maps/unWISE/MASKS/mask_Planck_full_v10.fits')
-
 
 
 comp ='{:.2f}'.format(comp_s)
@@ -437,14 +418,14 @@ if data_type == 'data':
 # --------------------------------------------
 if do_cov:
     clgg_theory_no_SN = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/QSO_maps/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt' )[:,1]
-    density = 114
+    density = 114 #TODO: compute number density 
     clgg_SN = 1./(density * (180./np.pi)**2.)
     clgg_noise = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/QSO_maps/QSO_z0.80_2.10_N__HPmapcut_default_addLIN_nside2048_galactic_DELTA_MAP_BINARY_MASK_nlqq.txt')
     clgg_tot = clgg_theory_no_SN + clgg_SN + clgg_noise
 
     # clgg_tot = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/desi_qso_clkg/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt')[:,1]
     clkg = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/QSO_maps/clkg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt')[:,1]
-    ells = np.linspace(0,len(clgg_tot)-1, len(clgg_tot))+0.5
+    ells = np.linspace(0,len(clgg_tot)-1, len(clgg_tot)) + 0.5 #TODO: change hardcoded redshift range
 
     nlkk = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:,1]
     ells_clkk = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:,0]
