@@ -237,9 +237,6 @@ if data_type == 'data':
                 region_completeness = eval(f"completeness_S_{region}")
                 region_bin_mask = eval(f"bin_mask_S_{region}")
 
-                # Update numcounts_map and handle overlaps
-                numcounts_map += region_masked_count_dn
-
                 # Find overlapping pixels and resolve by random counts
                 overlap_region = region_completeness > cut_off
                 overlap = overlap & overlap_region
@@ -261,10 +258,10 @@ if data_type == 'data':
         completeness[completeness < cut_off] = 0
 
         print("SHOTNOISE TEST\n")
-        print(np.sum(numcounts_map_S[numcounts_map_S>0]))
+        print(np.sum(numcounts_map_S[bin]))
         print(np.sum(numcounts_map_N[numcounts_map_N>0]))
         print(np.sum(numcounts_map_S[numcounts_map_S>0]) + np.sum(numcounts_map_N[numcounts_map_N>0]))
-        print(np.sum(numcounts_map[numcounts_map>0]))
+        print(np.sum(numcounts_map[bin_mask]))
         print((np.sum(numcounts_map_S[numcounts_map_S>0]) + np.sum(numcounts_map_N[numcounts_map_N>0])/np.sum(ran_map)))
 
 
