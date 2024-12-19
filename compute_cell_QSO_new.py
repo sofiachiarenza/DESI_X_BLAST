@@ -169,17 +169,37 @@ if data_type == 'data':
         ran_map_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
         ran_mean_S_SGCnoDES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
         completeness_S_SGCnoDES = ran_map_S_SGCnoDES/ran_mean_S_SGCnoDES
-        #STEP 2: S-NGCnoDES
+        #STEP 3: S-NGCnoDES
         masked_count_dn_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
         bin_mask_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
         ran_map_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
         ran_mean_S_NGCnoDES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
         completeness_S_NGCnoDES = ran_map_S_NGCnoDES/ran_mean_S_NGCnoDES
 
-        masked_count_dn_S = masked_count_dn_S_DES + masked_count_dn_S_SGCnoDES + masked_count_dn_S_NGCnoDES
-        bin_mask_S = bin_mask_S_DES + bin_mask_S_SGCnoDES + bin_mask_S_NGCnoDES
-        ran_map_S = ran_map_S_DES + ran_map_S_SGCnoDES + ran_map_S_NGCnoDES
-        completeness_S = completeness_S_DES + completeness_S_NGCnoDES + completeness_S_SGCnoDES
+        #handle overlapping pixels
+        summed_mask = bin_mask_S_DES + bin_mask_S_SGCnoDES + bin_mask_S_NGCnoDES
+        overlap_pixels = summed_mask > 1
+
+        # Get random map values for overlapping pixels
+        ran_values = np.stack([
+            ran_map_S_DES[overlap_pixels],
+            ran_map_S_SGCnoDES[overlap_pixels],
+            ran_map_S_NGCnoDES[overlap_pixels]], axis=0)
+
+        max_indices = np.argmax(ran_values, axis=0)
+
+        bin_mask_S_DES[overlap_pixels] = 0
+        bin_mask_S_SGCnoDES[overlap_pixels] = 0
+        bin_mask_S_NGCnoDES[overlap_pixels] = 0
+
+        bin_mask_S_DES[overlap_pixels] = (max_indices == 0)
+        bin_mask_S_SGCnoDES[overlap_pixels] = (max_indices == 1)
+        bin_mask_S_NGCnoDES[overlap_pixels] = (max_indices == 2)
+
+        completeness_S_DES = completeness_S_DES[bin_mask_S_DES]
+        completeness_S_NGCnoDES = completeness_S_NGCnoDES[bin_mask_S_NGCnoDES]
+        completeness_S_SGCnoDES = completeness_S_SGCnoDES[bin_mask_S_SGCnoDES]
+
 
     if sys_wts:
         numcounts_map_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
@@ -207,19 +227,51 @@ if data_type == 'data':
         masked_count_dn, bin_mask, ran_map, completeness, numcounts_map = masked_count_dn_S, bin_mask_S, ran_map_S, completeness_S, numcounts_map_S
         keep_bin_mask = (bin_mask>cut_off)
         bin_mask[keep_bin_mask] = True
-    if mask_name == 'A':
+    """if mask_name == 'A':
         numcounts_map = numcounts_map_N + numcounts_map_S 
-        overlap = (ran_map_S/ran_mean_S_DES>cut_off) & (ran_map_N/ran_mean_N>cut_off)
-        bin_mask = np.full(bin_mask_S.shape, False)
+        overlap = (ran_map_S/ran_mean_S>cut_off) & (ran_map_N/ran_mean_N>cut_off)
+        bin_mask = np.full(bin_mask_N.shape, False)
         keep_bin_mask = (bin_mask_N>cut_off) | (bin_mask_S>cut_off)
         bin_mask[keep_bin_mask] = True
         masked_count_dn, ran_map, completeness = 1.*masked_count_dn_N, 1.*ran_map_N, 1.*completeness_N
         masked_count_dn[masked_count_dn_S>-1] = masked_count_dn_S[masked_count_dn_S>-1]
         ran_map[ran_map_S>cut_off] = ran_map_S[ran_map_S>cut_off]
-        completeness[ran_map_S>cut_off] = completeness_S[ran_map_S>cut_off]
+        completeness[ran_map_S>cut_off] = completeness_S[ran_map_S>cut_off]"""
+    if mask_name == 'A':
+        #initialize variables in the north part
+        numcounts_map = numcounts_map_N
+        overlap = completeness_N > cut_off
+        bin_mask = np.full(bin_mask_N.shape, False)
+        keep_bin_mask = bin_mask_N>cut_off
+        bin_mask[keep_bin_mask] = True
+        masked_count_dn, ran_map, completeness = 1.*masked_count_dn_N, 1.*ran_map_N, 1.*completeness_N
 
-    # only in mock so far - check RB 29072024
-    completeness = completeness*bin_mask.astype(np.float64)
+        for region in ["DES", "SGCnoDES", "NGCnoDES"]:
+            # Load the relevant data for this region
+            region_masked_count_dn = eval(f"masked_count_dn_S_{region}")
+            region_ran_map = eval(f"ran_map_S_{region}")
+            region_completeness = eval(f"completeness_S_{region}")
+            region_bin_mask = eval(f"bin_mask_S_{region}")
+
+            # Update numcounts_map and handle overlaps
+            numcounts_map += region_masked_count_dn
+
+            # Find overlapping pixels and resolve by random counts
+            overlap_region = region_completeness > cut_off
+            overlap = overlap & overlap_region
+
+            # Update bin_mask for this region
+            keep_bin_mask_region = region_bin_mask > cut_off
+            bin_mask[keep_bin_mask_region] = True
+
+            # Update masked_count_dn for the final map
+            valid_pixels = region_masked_count_dn > -1
+            masked_count_dn[valid_pixels] = region_masked_count_dn[valid_pixels]
+            ran_map[region_ran_map>cut_off] = region_ran_map[region_ran_map>cut_off]
+            completeness[region_ran_map>cut_off] = region_completeness[region_ran_map>cut_off]
+
+    # only in mock so far - check RB 29072024 
+    completeness = completeness*bin_mask.astype(np.float64) #TODO: is it correct to turn this off??
     completeness[completeness<cut_off] = 0
 
     #use the numbercount maps to compute deltas
