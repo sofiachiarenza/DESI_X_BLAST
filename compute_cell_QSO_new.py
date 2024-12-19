@@ -265,9 +265,7 @@ if data_type == 'data':
         print(np.sum(completeness))
         print(np.sum(numcounts_map)/np.sum(completeness))
 
-
-        # Debug plots
-        plt.figure()
+        """plt.figure()
         hp.mollview(bin_mask, title='bin_mask')
         plt.savefig(f'results/plots/bin_mask{opt3}.pdf')
         
@@ -277,7 +275,7 @@ if data_type == 'data':
         
         plt.figure()
         plt.hist(completeness[completeness > 0], bins=100)
-        plt.savefig(f'results/plots/comp_hist{opt3}.pdf')
+        plt.savefig(f'results/plots/comp_hist{opt3}.pdf')"""
 
 
     #use the numbercount maps to compute deltas
