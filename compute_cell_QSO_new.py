@@ -93,7 +93,7 @@ extrasepnorm_str = 'new' if extrasepnorm else 'old'
 
 # Set up data string
 if data_type == 'data':
-    version = 'v1.5'
+    version = 'v1.2'
     data_str = f'desi_dr1_{zmin:.2f}_z_{zmax:.2f}_{lensing_str}_PR4mask'
     print(f'use Planck {lensing_str}')
 
