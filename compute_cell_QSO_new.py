@@ -258,7 +258,7 @@ if data_type == 'data':
         completeness[completeness < cut_off] = 0
 
         print("SHOTNOISE TEST\n")
-        print(np.sum(numcounts_map_S[bin]))
+        print(np.sum(numcounts_map_S[numcounts_map_S>0]))
         print(np.sum(numcounts_map_N[numcounts_map_N>0]))
         print(np.sum(numcounts_map_S[numcounts_map_S>0]) + np.sum(numcounts_map_N[numcounts_map_N>0]))
         print(np.sum(numcounts_map[bin_mask]))
