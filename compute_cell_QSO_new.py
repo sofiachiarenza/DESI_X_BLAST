@@ -261,9 +261,9 @@ if data_type == 'data':
         completeness[completeness < cut_off] = 0
 
         print("SHOTNOISE TEST\n")
-        print(np.sum(numcounts_map))
+        print(np.sum(numcounts_map[numcounts_map>0]))
         print(np.sum(completeness))
-        print(np.sum(numcounts_map)/np.sum(completeness))
+        print(np.sum(numcounts_map[numcounts_map>0])/np.sum(completeness))
 
         """plt.figure()
         hp.mollview(bin_mask, title='bin_mask')
