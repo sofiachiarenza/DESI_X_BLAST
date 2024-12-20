@@ -253,7 +253,10 @@ if data_type == 'data':
                 ran_map[region_bin_mask > cut_off] = region_ran_map[region_bin_mask > cut_off]
                 completeness[region_bin_mask > cut_off] = region_completeness[region_bin_mask > cut_off]
 
-        completeness = ran_map / ran_mean_S
+        if extrasepnorm:
+            completeness = ran_map / ran_mean_S_DES
+        else:
+            completeness = ran_map / ran_mean_S
         completeness = completeness * bin_mask.astype(np.float64)
         completeness[completeness < cut_off] = 0
 
