@@ -253,14 +253,9 @@ if data_type == 'data':
                 ran_map[region_bin_mask > cut_off] = region_ran_map[region_bin_mask > cut_off]
                 completeness[region_bin_mask > cut_off] = region_completeness[region_bin_mask > cut_off]
 
-        completeness = ran_map / ran_mean_S_DES
+        completeness = ran_map / ran_mean_S
         completeness = completeness * bin_mask.astype(np.float64)
         completeness[completeness < cut_off] = 0
-
-        print("SHOTNOISE TEST\n")
-        print("ratio:\t", np.sum(masked_count_dn[bin_mask])/np.sum(completeness))
-        print("pixel area:\t", hp.pixelfunc.nside2pixarea(nside, degrees=True))
-        print("number counts:\t", np.sum(masked_count_dn[bin_mask])/(np.sum(completeness)*hp.pixelfunc.nside2pixarea(nside, degrees=True)))
 
         """plt.figure()
         hp.mollview(bin_mask, title='bin_mask')
