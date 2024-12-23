@@ -72,6 +72,7 @@ filter_highell_alm = config['filter']['highell_alm']
 sepnorm = config['computation']['sepnorm']
 extrasepnorm = config['computation']['extrasepnorm']
 sys_wts = config['computation']['sys_wts']
+do_cls = config['computation']['do_cls']
 do_cov = config['computation']['do_cov']
 compute_cl = config['computation']['compute_cl']
 compute_coupled_cls = config['computation']['compute_coupled_cls']
@@ -415,7 +416,7 @@ if data_type == 'data':
 # --------------------------------------------
 # theory
 # --------------------------------------------
-if do_cov:
+if do_cls:
     clgg_theory_no_SN = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/QSO_maps/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt' )[:,1]
     density = 114 #TODO: compute number density 
     clgg_SN = 1./(density * (180./np.pi)**2.)
