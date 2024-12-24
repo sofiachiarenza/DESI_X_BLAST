@@ -434,7 +434,7 @@ if do_cls:
     clgg_theory_no_SN = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/QSO_maps/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt' )[:,1]
     density = 114 #TODO: compute number density 
     clgg_SN = 1./(density * (180./np.pi)**2.)
-    clgg_noise = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/QSO_maps/QSO_z0.80_2.10_N__HPmapcut_{w_str}_nside2048_galactic_DELTA_MAP_BINARY_MASK_nlqq.txt')
+    clgg_noise = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/QSO_maps/QSO_z0.80_2.10_N__HPmapcut_default_addLIN_nside2048_galactic_DELTA_MAP_BINARY_MASK_nlqq.txt')
     clgg_tot = clgg_theory_no_SN + clgg_SN + clgg_noise
 
     # clgg_tot = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/desi_qso_clkg/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt')[:,1]
