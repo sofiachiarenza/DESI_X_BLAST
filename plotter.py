@@ -75,7 +75,7 @@ titles = [
 colors = ['darkorange', 'navy', '#FF00FF']
 
 # Load theoretical data and unpack columns
-theory_file_path = f"results/binned_theory_Cl_kk_kg_gg_lmin{lmin}.txt"
+theory_file_path = f"results/binned_theory_Cl_kk_kg_gg_lmin{lmin}_cutoff{cut_off:.2f}_sepnorm{sepnorm_str}_{extrasepnorm_str}.txt"
 lbin_theory, Cl_theory_kk, Cl_theory_kg, Cl_theory_gg = np.loadtxt(theory_file_path, unpack=True)
 
 # Apply mask for l_cut to theoretical data
