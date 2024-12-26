@@ -2,8 +2,8 @@
 data_type: data  # Options: 'data', 'mock', or 'abacus'
 
 data:
-  zmin: 0.8
-  zmax: 2.1
+  zmin: 2.1
+  zmax: 4.0
   lensing_str: PR4  # Planck lensing version
   version: v1.5 
   weights: lin #could be 'none', 'lin' or 'rf'    
@@ -35,7 +35,7 @@ filter:
 # Computation options
 computation:
   sepnorm: true      # Normalization: separate or global normalization
-  extrasepnorm: true # additionally divide S in S-DES and S-noDES
+  extrasepnorm: false # additionally divide S in S-DES and S-noDES
   sys_wts: true      # Use data with systematics
   do_cls: true 
   do_cov: true       # Update theory paths
