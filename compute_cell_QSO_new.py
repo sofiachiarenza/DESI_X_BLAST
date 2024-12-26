@@ -297,7 +297,7 @@ if data_type == 'data':
         mean_count = np.nansum(masked_count)/np.nansum(bin_mask)
         masked_count_dn = data_map / mean_count - 1.
         masked_count_dn[np.isnan(masked_count_dn)] = 0 # same as masked_count_dn from DELTA_MAP for S and N
-        print("\n\nam I dumb?: ", mean_count, "\n\n" )
+        print("\n\nam I dumb?: ", mean_count/(41253/(12*(2048**2))), "\n\n" )
 
 elif 'abacus' in data_type:
     sys_wts=False #no sys_weights applied to abacus mocks
