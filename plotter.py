@@ -55,12 +55,24 @@ extrasepnorm = config['computation']['extrasepnorm']
 sepnorm_str = "True" if sepnorm else "False"
 extrasepnorm_str = "new" if extrasepnorm else "old"
 
+weights = config['data']['weights']
+valid_weights = {
+    "none": "default",
+    "lin": "default_addLIN",
+    "rf": "default_addRF"
+}
+
+if weights in valid_weights:
+    w_str = valid_weights[weights]
+else:
+    raise ValueError(f"Invalid weight string: {weights}")
+
 # Dynamically generated file paths based on config
 version = 'v1.5'
 lensing_str = config['data'].get('lensing_str', 'PR4') if data_type == "data" else ''
 data_str = f'desi_dr1_{zmin:.2f}_z_{zmax:.2f}_{lensing_str}_PR4mask' if data_type == "data" else 'mock_or_abacus_placeholder'
 filter_str = ""  # Add filtering options dynamically if applicable
-opt3 = f'_{version}_lmax6144_mapC2s{ap_scale}{filter_str}_comp{comp_s:.1f}_cutoff{cut_off:.1f}_{data_str}_lmin{lmin}_binsize{binsize}_sepnorm{sepnorm_str}_{extrasepnorm_str}'
+opt3 = f'_{version}_lmax6144_mapC2s{ap_scale}{filter_str}_comp{comp_s:.1f}_cutoff{cut_off:.1f}_{data_str}_lmin{lmin}_binsize{binsize}_sepnorm{sepnorm_str}_{extrasepnorm_str}_{w_str}'
 
 file_paths = [
     f"results/Clkg_{mask_name}{opt3}.txt",
