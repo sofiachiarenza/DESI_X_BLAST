@@ -472,7 +472,7 @@ if do_cls:
     cl_kk_binned = bins.bin_cell(clkktot)
     cl_kg_binned = bins.bin_cell(clkg)
     cl_gg_binned = bins.bin_cell(clgg_tot)
-    np.savetxt(f'{PATH_oc}/binned_theory_Cl_kk_kg_gg_lmin{compute_lmin:.0f}_cutoff{cut_off:.2f}_sepnorm{sepnorm_str}_{extrasepnorm_str}.txt',np.array([ell_eff,cl_kk_binned,cl_kg_binned,cl_gg_binned]).T)
+    np.savetxt(f'{PATH_oc}/binned_theory_Cl_kk_kg_gg_z{zmin:.2f}_{zmax:.2f}_lmin{compute_lmin:.0f}_cutoff{cut_off:.2f}_sepnorm{sepnorm_str}_{extrasepnorm_str}.txt',np.array([ell_eff,cl_kk_binned,cl_kg_binned,cl_gg_binned]).T)
     print('save theory Cl')
 
 if data_type == 'mock' or 'abacus' in data_type:
