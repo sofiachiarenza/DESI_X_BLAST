@@ -309,8 +309,6 @@ if data_type == 'data':
     mean_galaxy_counts = mean_count
     density = mean_galaxy_counts / pixel_area
 
-    print("\nDensity: ", density , "\n")
-
 elif 'abacus' in data_type:
     sys_wts=False #no sys_weights applied to abacus mocks
     bin_mask_N = hp.read_map(f'{PATH_d}/QSO_z0.80_2.10_N__HPmapcut_default_addLIN_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits')
@@ -372,8 +370,8 @@ elif data_type == 'mock':
     # np.savetxt(f'{PATH_oc}/binary_mask_{mask_name}{opt3}.txt',bin_mask)
     # assert(False)
     # mock way
-    density = 114
-    mean_galaxy_counts = density * 41253./(12*nside**2)
+    #density = 114
+    #mean_galaxy_counts = density * 41253./(12*nside**2)
 
     # plt.figure();hp.mollview(bin_mask, title='bin_mask');plt.savefig(f'plots/bin_mask{opt3}.pdf')
     # plt.figure();hp.mollview(completeness, title='comp_mask');plt.savefig(f'plots/comp_mask{opt3}.pdf')
@@ -444,8 +442,7 @@ if data_type == 'data':
 # theory
 # --------------------------------------------
 if do_cls:
-    clgg_theory_no_SN = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/QSO_maps/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt' )[:,1]
-    density = 114 #TODO: compute number density 
+    clgg_theory_no_SN = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/QSO_maps/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt' )[:,1] 
     clgg_SN = 1./(density * (180./np.pi)**2.)
     clgg_noise = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/QSO_maps/QSO_z0.80_2.10_N__HPmapcut_default_addLIN_nside2048_galactic_DELTA_MAP_BINARY_MASK_nlqq.txt')
     clgg_tot = clgg_theory_no_SN + clgg_SN + clgg_noise
@@ -475,7 +472,7 @@ if do_cls:
     cl_kk_binned = bins.bin_cell(clkktot)
     cl_kg_binned = bins.bin_cell(clkg)
     cl_gg_binned = bins.bin_cell(clgg_tot)
-    np.savetxt(f'{PATH_oc}/binned_theory_Cl_kk_kg_gg_lmin{compute_lmin:.0f}.txt',np.array([ell_eff,cl_kk_binned,cl_kg_binned,cl_gg_binned]).T)
+    np.savetxt(f'{PATH_oc}/binned_theory_Cl_kk_kg_gg_lmin{compute_lmin:.0f}_sepnorm{sepnorm_str}_{extrasepnorm_str}.txt',np.array([ell_eff,cl_kk_binned,cl_kg_binned,cl_gg_binned]).T)
     print('save theory Cl')
 
 if data_type == 'mock' or 'abacus' in data_type:
