@@ -5,7 +5,8 @@ data:
   zmin: 0.8
   zmax: 2.1
   lensing_str: PR4  # Planck lensing version
-  version: v1.5     
+  version: v1.5 
+  weights: lin #could be 'none', 'lin' or 'rf'    
 
 mock:
   i_min: 0          # First mock index
@@ -36,6 +37,7 @@ computation:
   sepnorm: true      # Normalization: separate or global normalization
   extrasepnorm: true # additionally divide S in S-DES and S-noDES
   sys_wts: true      # Use data with systematics
+  do_cls: true 
   do_cov: true       # Update theory paths
   compute_cl: true   # Compute angular power spectrum
   compute_coupled_cls: false
