@@ -133,7 +133,7 @@ axs[1, 1].legend(loc="best", fontsize=10)
 fig.suptitle(overall_title, fontsize=16, y=0.98)
 
 # Adjust layout and dynamically save the figure
-output_plot_path = f"results/plots/Cls_zmin{zmin}_zmax{zmax}_{mask_name}_v1.5_ap{ap_scale}_comp{comp_s}_sep{sepnorm_str}_{extrasepnorm_str}.pdf"
+output_plot_path = f"results/plots/Cls_zmin{zmin}_zmax{zmax}_{mask_name}_v1.5_ap{ap_scale}_cutoff{cut_off:.2f}_sep{sepnorm_str}_{extrasepnorm_str}.pdf"
 plt.tight_layout(rect=[0, 0, 1, 0.96])  # Adjust layout to accommodate the overall title
 plt.savefig(output_plot_path, format="pdf")
 plt.show()
