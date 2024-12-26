@@ -24,7 +24,7 @@ abacus:
 mask:
   ap_scale: 0.05    # Apodization scale in degrees
   completeness: 0.00
-  cut_off: 0.20
+  cut_off: 0.00
   mask_name: A      # N: NGC, S: SGC, A: NGC+SGC
 
 # Filtering options
