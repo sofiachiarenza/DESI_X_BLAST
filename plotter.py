@@ -91,7 +91,7 @@ theory_columns = [Cl_theory_kg, Cl_theory_gg, Cl_theory_kk]
 
 # Overall title
 overall_title = (f"{data_type.capitalize()}, Mask: {mask_name}, zmin: {zmin:.1f}, zmax: {zmax:.1f}, "
-                 f"Apodization Scale: {ap_scale:.2f}, Completeness: {comp_s:.2f}, "
+                 f"Apodization Scale: {ap_scale:.2f}, Cutoff: {cut_off:.2f}, "
                  f"Sepnorm: {sepnorm_str}, {extrasepnorm_str}")
 
 # Create figure with 2x2 subplots
