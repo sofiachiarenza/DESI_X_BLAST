@@ -236,8 +236,11 @@ if data_type == 'data':
             ran_map[ran_map_S > cut_off] = ran_map_S[ran_map_S > cut_off]
             completeness[ran_map_S > cut_off] = completeness_S[ran_map_S > cut_off]
 
+            masked_count = numcounts_map / completeness * bin_mask
+            mean_count = np.nansum(masked_count)/np.nansum(bin_mask)
+
         if extrasepnorm == True:
-            numcounts_map = numcounts_map_N
+            numcounts_map = numcounts_map_N + numcounts_map_S
             overlap = ran_map_N / ran_mean_N > cut_off
             bin_mask = np.full(bin_mask_N.shape, False)
             keep_bin_mask = bin_mask_N > cut_off
@@ -271,6 +274,9 @@ if data_type == 'data':
             completeness = ran_map / ran_mean_S_DES
         else:
             completeness = ran_map / ran_mean_S
+
+        masked_count = numcounts_map / completeness * bin_mask
+        mean_count = np.nansum(masked_count)/np.nansum(bin_mask)
         
     completeness = completeness * bin_mask.astype(np.float64)
     completeness[completeness < cut_off] = 0
@@ -297,7 +303,13 @@ if data_type == 'data':
         mean_count = np.nansum(masked_count)/np.nansum(bin_mask)
         masked_count_dn = data_map / mean_count - 1.
         masked_count_dn[np.isnan(masked_count_dn)] = 0 # same as masked_count_dn from DELTA_MAP for S and N
-        print("\n\nam I dumb?: ", mean_count/(41253/(12*(2048**2))), "\n\n" )
+        #print("\n\nam I dumb?: ", mean_count/(41253/(12*(2048**2))), "\n\n" )
+
+    pixel_area = 41253/(12*(nside**2)) 
+    mean_galaxy_counts = mean_count
+    density = mean_galaxy_counts / pixel_area
+
+    print("\nDensity: ", density , "\n")
 
 elif 'abacus' in data_type:
     sys_wts=False #no sys_weights applied to abacus mocks
