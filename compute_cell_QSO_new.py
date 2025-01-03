@@ -20,7 +20,7 @@ print('=== COMPUTE CELL ===')
 nside = 2048
 
 # Paths
-PATH_d = '/global/cfs/cdirs/desi/users/akrolew/QSO_maps/' # path for desi data
+PATH_d = '/global/homes/s/schiaren/CMBxQSO/QSO_maps' # path for desi data
 PATH_m = '/global/cfs/cdirs/desi/users/akrolew/QSO_maps/' # path for mocks
 PATH_p = '/pscratch/sd/r/rmvd2/CMBxLya/data/COM_Lensing_4096_R3.00/' # path for planck data
 abacus_dir = '/global/cfs/cdirs/desi/users/akrolew/AbacusSummit_huge_c000_ph201_QSO/data/'
