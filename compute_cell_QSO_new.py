@@ -152,26 +152,7 @@ if data_type == 'data':
         ran_mean_S = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
         completeness_S = ran_map_S/ran_mean_S
     else:  
-        #STEP 1: S-DES
-        masked_count_dn_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_DES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
-        bin_mask_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_DES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
-        ran_map_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_DES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
-        ran_mean_S_DES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_DES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
-        completeness_S_DES = ran_map_S_DES/ran_mean_S_DES
-        #STEP 2: S-SGCnoDES
-        masked_count_dn_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_SGC-noDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
-        bin_mask_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_SGC-noDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
-        ran_map_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_SGC-noDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
-        ran_mean_S_SGCnoDES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S_SGC-noDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
-        completeness_S_SGCnoDES = ran_map_S_SGCnoDES/ran_mean_S_SGCnoDES
-        #STEP 3: S-NGCnoDES
-        masked_count_dn_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_NGC__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
-        bin_mask_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_NGC__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
-        ran_map_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_NGC__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
-        ran_mean_S_NGCnoDES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_S_NGC__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
-        completeness_S_NGCnoDES = ran_map_S_NGCnoDES/ran_mean_S_NGCnoDES
-
-        #handle overlapping pixels
+        # Handle overlapping pixels
         summed_mask = bin_mask_S_DES + bin_mask_S_SGCnoDES + bin_mask_S_NGCnoDES
         overlap_pixels = summed_mask > 1
 
@@ -183,17 +164,26 @@ if data_type == 'data':
 
         max_indices = np.argmax(ran_values, axis=0)
 
+        # Reset masks for overlapping pixels
         bin_mask_S_DES[overlap_pixels] = 0
         bin_mask_S_SGCnoDES[overlap_pixels] = 0
         bin_mask_S_NGCnoDES[overlap_pixels] = 0
 
+        # Assign based on max_indices
         bin_mask_S_DES[overlap_pixels] = (max_indices == 0)
         bin_mask_S_SGCnoDES[overlap_pixels] = (max_indices == 1)
         bin_mask_S_NGCnoDES[overlap_pixels] = (max_indices == 2)
 
+        # Ensure masks are boolean
+        bin_mask_S_DES = bin_mask_S_DES.astype(bool)
+        bin_mask_S_SGCnoDES = bin_mask_S_SGCnoDES.astype(bool)
+        bin_mask_S_NGCnoDES = bin_mask_S_NGCnoDES.astype(bool)
+
+        # Apply masks
         completeness_S_DES = completeness_S_DES[bin_mask_S_DES]
         completeness_S_NGCnoDES = completeness_S_NGCnoDES[bin_mask_S_NGCnoDES]
         completeness_S_SGCnoDES = completeness_S_SGCnoDES[bin_mask_S_SGCnoDES]
+
 
 
     if sys_wts:
