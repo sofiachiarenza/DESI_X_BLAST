@@ -76,14 +76,15 @@ def write_data_and_ran_map(version = 'v1.5', zmin = 0.80, zmax = 2.10, region = 
 		len_after_cut = np.shape(ra)[-1]
 		norm_fac = len_after_cut / len_before_cut
 
-
 		# Hemisphere cut
-		if (region == 'N') or (region == 'S') or (region == 'S_NGC') or (region == 'S_SGC-noDES'):
+		if (region == 'N') or (region == 'S') or (region == 'S_NGC'):
+			# Handle Northern and Southern hemisphere cuts
 			if (region == 'N') or (region == 'S'):
 				regsel = region
-			elif (region == 'S_NGC') or (region == 'S_SGC-noDES'):
+			elif region == 'S_NGC':
 				regsel = 'S'
-	
+
+			# Filter data based on the photometric system
 			ra = ra[photsys == regsel]
 			dec = dec[photsys == regsel]
 			weight = weight[photsys == regsel]
@@ -91,9 +92,11 @@ def write_data_and_ran_map(version = 'v1.5', zmin = 0.80, zmax = 2.10, region = 
 			z = z[photsys == regsel]
 			targetid = targetid[photsys == regsel]
 			photsys = photsys[photsys == regsel]
+
 		elif region == 'DES':
+			# Select data within the DES region
 			is_DES_dat = select_regressis_DES(ra, dec)
-	
+
 			ra = ra[is_DES_dat]
 			dec = dec[is_DES_dat]
 			weight = weight[is_DES_dat]
@@ -101,17 +104,21 @@ def write_data_and_ran_map(version = 'v1.5', zmin = 0.80, zmax = 2.10, region = 
 			z = z[is_DES_dat]
 			photsys = photsys[is_DES_dat]
 			targetid = targetid[is_DES_dat]
+
 		elif region == 'S_SGC-noDES':
+			# Filter out DES data specifically from the Southern region
 			is_DES_dat = select_regressis_DES(ra, dec)
 
-			ra = ra[~is_DES_dat]
-			dec = dec[~is_DES_dat]
-			weight = weight[~is_DES_dat]
-			weight_sys = weight_sys[~is_DES_dat]
-			z = z[~is_DES_dat]
-			photsys = photsys[~is_DES_dat]
-			targetid = targetid[~is_DES_dat]
-		
+			# Apply both 'S' (Southern) and not in DES filters
+			mask = (photsys == 'S') & (~is_DES_dat)
+			ra = ra[mask]
+			dec = dec[mask]
+			weight = weight[mask]
+			weight_sys = weight_sys[mask]
+			z = z[mask]
+			photsys = photsys[mask]
+			targetid = targetid[mask]
+
 		return ra, dec, weight, weight_sys, z, photsys, targetid, norm_fac
 
 
