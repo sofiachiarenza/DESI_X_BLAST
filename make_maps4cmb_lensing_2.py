@@ -137,7 +137,10 @@ def write_data_and_ran_map(version = 'v1.5', zmin = 0.80, zmax = 2.10, region = 
 		weight_lin = full[targetid_as][full_inds]['WEIGHT_IMLIN']
 		weight = weight * weight_lin / weight_sys
 	elif weight_opt == 'default_addRF':
-		pass
+		targetid_as = np.argsort(full['TARGETID'])
+		full_inds = np.searchsorted(full['TARGETID'][targetid_as], targetid)
+		weight_rf = full[targetid_as][full_inds]['WEIGHT_RF']
+		weight = weight * weight_rf / weight_sys
 
 	coords = SkyCoord(ra=ra*u.deg,dec=dec*u.deg)
 	pix = hp.ang2pix(nside, coords.galactic.l.value, coords.galactic.b.value, lonlat=True)
