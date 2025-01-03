@@ -201,8 +201,8 @@ if data_type == 'data':
         numcounts_map_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
         if extrasepnorm:
             numcounts_map_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
-            numcounts_map_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_NGC__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
-            numcounts_map_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_SGC-noDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
+            numcounts_map_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
+            numcounts_map_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
             numcounts_map_S = numcounts_map_S_DES + numcounts_map_S_NGCnoDES + numcounts_map_S_SGCnoDES
 
     elif (sys_wts == False):
@@ -210,8 +210,8 @@ if data_type == 'data':
         numcounts_map_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP_UNW.fits', field=[0])
         if extrasepnorm:
             numcounts_map_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-DES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP_UNW.fits', field=[0])
-            numcounts_map_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_NGC__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP_UNW.fits', field=[0])
-            numcounts_map_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_SGC-noDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP_UNW.fits', field=[0])
+            numcounts_map_S_NGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-NGCnoDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP_UNW.fits', field=[0])
+            numcounts_map_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S-SGCnoDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP_UNW.fits', field=[0])
             numcounts_map_S = numcounts_map_S_DES + numcounts_map_S_NGCnoDES + numcounts_map_S_SGCnoDES
 
     if mask_name == 'N':
