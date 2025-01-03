@@ -17,10 +17,10 @@ def select_regressis_DES(ra, dec):
 
     from regressis import footprint
     import healpy as hp
-    foot = footprint.DR9Footprint(256, mask_lmc=False, clear_south=True, mask_around_des=False, cut_desi=False)
+    foot = footprint.DR9Footprint(2048, mask_lmc=False, clear_south=True, mask_around_des=False, cut_desi=False)
     north, south, des = foot.get_imaging_surveys()
     th,phi = (-dec+90.)*np.pi/180.,ra*np.pi/180.
-    pix = hp.ang2pix(256,th,phi,nest=True)
+    pix = hp.ang2pix(2048,th,phi,nest=True)
     sel_des = des[pix]
     return sel_des
 
