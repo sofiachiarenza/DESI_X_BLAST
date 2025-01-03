@@ -198,8 +198,8 @@ regions = ['N','S','DES','S_NGC','S_SGC-noDES']
 weight_opts = ['default','default_addLIN','default_addRF']
 #zmins = [0.8, 0.8, 1.5, 2.1, 2.1, 2.5]
 #zmaxs = [2.1, 1.5, 2.1, 3.5, 2.5, 3.5]
-zmins = 0.8
-zmaxs = 2.1
+zmins = [0.8]
+zmaxs = [2.1]
 
 cnt = 0
 for reg in regions:
