@@ -7,6 +7,7 @@ import time
 from mpi4py import MPI
 
 rank = MPI.COMM_WORLD.Get_rank()
+print("Rank: ", rank)
 
 def select_regressis_DES(ra, dec):    
     '''
@@ -144,7 +145,7 @@ def write_data_and_ran_map(version = 'v1.5', zmin = 0.80, zmax = 2.10, region = 
 
 	coords = SkyCoord(ra=ra*u.deg,dec=dec*u.deg)
 	pix = hp.ang2pix(nside, coords.galactic.l.value, coords.galactic.b.value, lonlat=True)
-	data_map = np.bincount(pix,minlength=12*nside**2,weights=weight)
+	data_map = np.bincount(pix, minlength=12*nside**2, weights=weight)
 	hp.write_map(outdir + 'QSO_z%.2f_%.2f_%s__HPmapcut_%s_nside%i_%s_comp0.00_galactic_DATA_MAP.fits' % (zmin, zmax, region, weight_opt, nside, version),data_map,overwrite=True)
 	map_unw = np.bincount(pix,minlength=12*nside**2)
 	hp.write_map(outdir + 'QSO_z%.2f_%.2f_%s__HPmapcut_%s_nside%i_%s_comp0.00_galactic_DATA_MAP_UNW.fits' % (zmin, zmax, region, weight_opt, nside, version),map_unw,overwrite=True)
@@ -155,7 +156,7 @@ def write_data_and_ran_map(version = 'v1.5', zmin = 0.80, zmax = 2.10, region = 
 	np.savetxt(outdir + 'QSO_z%.2f_%.2f_%s__HPmapcut_%s_dndz.txt' % (zmin, zmax, region, weight_opt), np.array([ 0.5 * (zbin[1:] + zbin[:-1]),
 		counts, counts_unw]).T, header = '# zcenter weighted_counts unweighted_counts')
 
-	ran_map = np.zeros(12*2048**2)
+	ran_map = np.zeros(12*nside**2)
 
 	for i in range(18):
 		ra, dec, weight, weight_sys, z, photsys, targetid, _ = cut_to_region_and_zrange('/global/cfs/cdirs/desi/survey/catalogs/Y1/LSS/iron/LSScats/%s/QSO_NGC_%i_clustering.ran.fits' % (version, i),
@@ -175,7 +176,7 @@ def write_data_and_ran_map(version = 'v1.5', zmin = 0.80, zmax = 2.10, region = 
 	f.close()
 
 	mask = np.ones_like(ran_map)
-	mask[ran_map <= ran_mean * 0.00] = 0
+	mask[ran_map <= ran_mean * comp] = 0
 	hp.write_map(outdir + 'QSO_z%.2f_%.2f_%s__HPmapcut_%s_nside%i_%s_comp0.00_galactic_BINARY_MASK.fits' % (zmin, zmax, region, weight_opt, nside, version),mask,overwrite=True)
 
 	mask_lost = ran_map / ran_mean
@@ -195,8 +196,10 @@ def write_data_and_ran_map(version = 'v1.5', zmin = 0.80, zmax = 2.10, region = 
 	
 regions = ['N','S','DES','S_NGC','S_SGC-noDES']
 weight_opts = ['default','default_addLIN','default_addRF']
-zmins = [0.8, 0.8, 1.5, 2.1, 2.1, 2.5]
-zmaxs = [2.1, 1.5, 2.1, 3.5, 2.5, 3.5]
+#zmins = [0.8, 0.8, 1.5, 2.1, 2.1, 2.5]
+#zmaxs = [2.1, 1.5, 2.1, 3.5, 2.5, 3.5]
+zmins = 0.8
+zmaxs = 2.1
 
 cnt = 0
 for reg in regions:
