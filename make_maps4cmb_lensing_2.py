@@ -27,12 +27,12 @@ def select_regressis_DES(ra, dec):
 
 t0 = time.time()
 
-outdir = '/global/cfs/cdirs/desi/users/akrolew/QSO_maps/'
+outdir = '/global/homes/s/schiaren/QSO_maps/'
 
 
-def write_data_and_ran_map(version = 'v1.5', zmin = 0.80, zmax = 2.10, region = 'N', weight_opt = 'default_addLIN', nside = 2048,
-	comp = 0.00,
-	coord = 'galactic'):
+def write_data_and_ran_map(version = 'v1.5', zmin = 0.80, zmax = 2.10, region = 'N', 
+						   weight_opt = 'default_addLIN', nside = 2048,
+						   comp = 0.00, coord = 'galactic'):
 	def cut_to_region_and_zrange(fname_NGC, fname_SGC):
 		data_file1 = fits.open(fname_NGC)[1].data
 		data_file2 = fits.open(fname_SGC)[1].data
