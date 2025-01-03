@@ -27,7 +27,7 @@ def select_regressis_DES(ra, dec):
 
 t0 = time.time()
 
-outdir = '/global/homes/s/schiaren/QSO_maps/'
+outdir = '/global/homes/s/schiaren/CMBxQSO/QSO_maps/'
 
 
 def write_data_and_ran_map(version = 'v1.5', zmin = 0.80, zmax = 2.10, region = 'N', 
