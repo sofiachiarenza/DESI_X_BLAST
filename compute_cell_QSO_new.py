@@ -204,7 +204,7 @@ if data_type == 'data':
         completeness_S_NGCnoDES = completeness_S_NGCnoDES[bin_mask_S_NGCnoDES]
         completeness_S_SGCnoDES = completeness_S_SGCnoDES[bin_mask_S_SGCnoDES]
 
-        print("completeness_S_DES: ", np.shape(completeness_S_DES))
+        print("completeness_S_NGCnoDES: ", np.shape(completeness_S_NGCnoDES))
 
 
 
