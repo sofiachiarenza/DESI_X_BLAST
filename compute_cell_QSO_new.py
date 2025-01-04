@@ -205,10 +205,6 @@ if data_type == 'data':
         completeness_S_NGCnoDES[~bin_mask_S_NGCnoDES] = 0
         completeness_S_SGCnoDES[~bin_mask_S_SGCnoDES] = 0
 
-        print("completeness_S_NGCnoDES: ", np.shape(completeness_S_NGCnoDES))
-
-
-
     if sys_wts:
         numcounts_map_N = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_N__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
         numcounts_map_S = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DATA_MAP.fits', field=[0])
