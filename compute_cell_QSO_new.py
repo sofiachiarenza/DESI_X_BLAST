@@ -201,6 +201,8 @@ if data_type == 'data':
         bin_mask_S_SGCnoDES = bin_mask_S_SGCnoDES.astype(bool)
         bin_mask_S_NGCnoDES = bin_mask_S_NGCnoDES.astype(bool)
 
+        print("Data type: ", bin_mask_S_DES.dtype)
+
         # Apply masks
         completeness_S_DES = completeness_S_DES[bin_mask_S_DES]
         completeness_S_NGCnoDES = completeness_S_NGCnoDES[bin_mask_S_NGCnoDES]
