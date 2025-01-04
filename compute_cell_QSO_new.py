@@ -159,8 +159,6 @@ if data_type == 'data':
         ran_mean_S_DES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_DES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
         completeness_S_DES = ran_map_S_DES/ran_mean_S_DES
 
-        print("completeness_S_DES: ", np.shape(completeness_S_DES))
-
         #STEP 2: S-SGCnoDES
         masked_count_dn_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_SGC-noDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
         bin_mask_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_SGC-noDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
@@ -205,6 +203,8 @@ if data_type == 'data':
         completeness_S_DES = completeness_S_DES[bin_mask_S_DES]
         completeness_S_NGCnoDES = completeness_S_NGCnoDES[bin_mask_S_NGCnoDES]
         completeness_S_SGCnoDES = completeness_S_SGCnoDES[bin_mask_S_SGCnoDES]
+
+        print("completeness_S_DES: ", np.shape(completeness_S_DES))
 
 
 
