@@ -194,6 +194,11 @@ if data_type == 'data':
         bin_mask_S_SGCnoDES[overlap_pixels] = (max_indices == 1)
         bin_mask_S_NGCnoDES[overlap_pixels] = (max_indices == 2)
 
+        if np.all((bin_mask_S_DES == 0) | (bin_mask_S_DES == 1)):
+            print("The array contains only 0 and 1.")
+        else:
+            print("The array contains values other than 0 and 1.")
+
         # Ensure masks are boolean
         bin_mask_S_DES = bin_mask_S_DES.astype(bool)
         bin_mask_S_SGCnoDES = bin_mask_S_SGCnoDES.astype(bool)
