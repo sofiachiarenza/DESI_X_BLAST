@@ -194,19 +194,16 @@ if data_type == 'data':
         bin_mask_S_SGCnoDES[overlap_pixels] = (max_indices == 1)
         bin_mask_S_NGCnoDES[overlap_pixels] = (max_indices == 2)
 
-        print("Data type: ", bin_mask_S_DES.dtype)
 
         # Ensure masks are boolean
         bin_mask_S_DES = bin_mask_S_DES.astype(bool)
         bin_mask_S_SGCnoDES = bin_mask_S_SGCnoDES.astype(bool)
         bin_mask_S_NGCnoDES = bin_mask_S_NGCnoDES.astype(bool)
 
-        print("Data type: ", bin_mask_S_DES.dtype)
-
         # Apply masks
-        completeness_S_DES = completeness_S_DES[bin_mask_S_DES]
-        completeness_S_NGCnoDES = completeness_S_NGCnoDES[bin_mask_S_NGCnoDES]
-        completeness_S_SGCnoDES = completeness_S_SGCnoDES[bin_mask_S_SGCnoDES]
+        completeness_S_DES[~bin_mask_S_DES] = 0
+        completeness_S_NGCnoDES[~bin_mask_S_NGCnoDES] = 0
+        completeness_S_SGCnoDES[~bin_mask_S_SGCnoDES] = 0
 
         print("completeness_S_NGCnoDES: ", np.shape(completeness_S_NGCnoDES))
 
