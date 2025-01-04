@@ -263,6 +263,11 @@ if data_type == 'data':
                 region_completeness = eval(f"completeness_S_{region}")
                 region_bin_mask = eval(f"bin_mask_S_{region}")
 
+                print("\n\nregion_masked_count_dn: ", np.shape(region_masked_count_dn))
+                print("region_ran_map: ", np.shape(region_ran_map))
+                print("region_completeness: ", np.shape(region_completeness))
+                print("region_bin_mask: ", np.shape(region_bin_mask),"\n\n")
+
                 # Find overlapping pixels and resolve by random counts
                 overlap_region = region_completeness > cut_off
                 overlap = overlap & overlap_region
