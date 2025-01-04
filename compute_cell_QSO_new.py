@@ -158,6 +158,9 @@ if data_type == 'data':
         ran_map_S_DES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_DES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_RAN_MAP.fits') # why not exactly same dep completeness?
         ran_mean_S_DES = np.loadtxt(f'{PATH_d}QSO_z{zmin:.2f}_{zmax:.2f}_DES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_ran_mean.txt') # doesn't dep on completeness
         completeness_S_DES = ran_map_S_DES/ran_mean_S_DES
+
+        print("completeness_S_DES: ", np.shape(completeness_S_DES))
+
         #STEP 2: S-SGCnoDES
         masked_count_dn_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_SGC-noDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_DELTA_MAP.fits') #Directly read delta_map
         bin_mask_S_SGCnoDES = hp.read_map(f'{PATH_d}/QSO_z{zmin:.2f}_{zmax:.2f}_S_SGC-noDES__HPmapcut_{w_str}_nside2048_{version}_comp{comp}_galactic_BINARY_MASK.fits') #
@@ -262,11 +265,6 @@ if data_type == 'data':
                 region_ran_map = eval(f"ran_map_S_{region}")
                 region_completeness = eval(f"completeness_S_{region}")
                 region_bin_mask = eval(f"bin_mask_S_{region}")
-
-                print("\n\nregion_masked_count_dn: ", np.shape(region_masked_count_dn))
-                print("region_ran_map: ", np.shape(region_ran_map))
-                print("region_completeness: ", np.shape(region_completeness))
-                print("region_bin_mask: ", np.shape(region_bin_mask),"\n\n")
 
                 # Find overlapping pixels and resolve by random counts
                 overlap_region = region_completeness > cut_off
