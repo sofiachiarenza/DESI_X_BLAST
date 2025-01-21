@@ -133,7 +133,8 @@ t0 = time.time()
 # --------------------------------------------
 # masks
 # --------------------------------------------
-mask_pl = hp.read_map(f'/pscratch/sd/r/rmvd2/CMBxLya/data/COM_Lensing_4096_R3.00/mask.fits.gz')
+#mask_pl = hp.read_map(f'/pscratch/sd/r/rmvd2/CMBxLya/data/COM_Lensing_4096_R3.00/mask.fits.gz')
+mask_pl = hp.read_map('inputs/mask.fits.gz')
 # mask_pl = hp.read_map(f'/global/homes/s/sferraro/maps/unWISE/MASKS/mask_Planck_full_v10.fits')
 
 
@@ -237,13 +238,13 @@ if data_type == 'data':
             numcounts_map = numcounts_map_N + numcounts_map_S 
             overlap = (ran_map_S / ran_mean_S > cut_off) & (ran_map_N / ran_mean_N > cut_off)
             bin_mask = np.full(bin_mask_N.shape, False)
-            keep_bin_mask = (bin_mask_N > cut_off) | (bin_mask_S > cut_off)
+            keep_bin_mask = (completeness_N > cut_off) | (completeness_S > cut_off)
             bin_mask[keep_bin_mask] = True
             masked_count_dn, ran_map, completeness = 1. * masked_count_dn_N, 1. * ran_map_N, 1. * completeness_N
 
             masked_count_dn[masked_count_dn_S > -1] = masked_count_dn_S[masked_count_dn_S > -1]
-            ran_map[ran_map_S > cut_off] = ran_map_S[ran_map_S > cut_off]
-            completeness[ran_map_S > cut_off] = completeness_S[ran_map_S > cut_off]
+            ran_map[completeness_S > cut_off] = ran_map_S[completeness_S > cut_off]
+            completeness[completeness_S > cut_off] = completeness_S[completeness_S > cut_off]
 
             masked_count = numcounts_map / completeness * bin_mask
             mean_count = np.nansum(masked_count)/np.nansum(bin_mask)
@@ -252,7 +253,7 @@ if data_type == 'data':
             numcounts_map = numcounts_map_N + numcounts_map_S
             overlap = ran_map_N / ran_mean_N > cut_off
             bin_mask = np.full(bin_mask_N.shape, False)
-            keep_bin_mask = bin_mask_N > cut_off
+            keep_bin_mask = completeness_N > cut_off
             bin_mask[keep_bin_mask] = True
             masked_count_dn, ran_map, completeness = 1. * masked_count_dn_N, 1. * ran_map_N, 1. * completeness_N
 
@@ -268,7 +269,7 @@ if data_type == 'data':
                 overlap = overlap & overlap_region
 
                 # Update bin_mask for this region
-                keep_bin_mask_region = region_bin_mask > cut_off
+                keep_bin_mask_region = region_completeness > cut_off
                 bin_mask[keep_bin_mask_region] = True
 
                 # Update masked_count_dn for the final map
@@ -276,13 +277,13 @@ if data_type == 'data':
                 masked_count_dn[valid_pixels] = region_masked_count_dn[valid_pixels]
                 
                 # Ensure ran_map and completeness are properly updated
-                ran_map[region_bin_mask > cut_off] = region_ran_map[region_bin_mask > cut_off]
-                completeness[region_bin_mask > cut_off] = region_completeness[region_bin_mask > cut_off]
+                ran_map[region_completeness > cut_off] = region_ran_map[region_completeness > cut_off]
+                completeness[region_completeness > cut_off] = region_completeness[region_completeness > cut_off]
 
-        if extrasepnorm:
+        """if extrasepnorm:
             completeness = ran_map / ran_mean_S_DES
         else:
-            completeness = ran_map / ran_mean_S
+            completeness = ran_map / ran_mean_S"""
 
         masked_count = numcounts_map / completeness * bin_mask
         mean_count = np.nansum(masked_count)/np.nansum(bin_mask)
@@ -375,17 +376,6 @@ elif data_type == 'mock':
 
     completeness = completeness*bin_mask.astype(np.float64)
     completeness[completeness<cut_off] = 0
-    # np.savetxt(f'{PATH_oc}/completeness_{mask_name}{opt3}.txt',completeness)
-    # np.savetxt(f'{PATH_oc}/binary_mask_{mask_name}{opt3}.txt',bin_mask)
-    # assert(False)
-    # mock way
-    #density = 114
-    #mean_galaxy_counts = density * 41253./(12*nside**2)
-
-    # plt.figure();hp.mollview(bin_mask, title='bin_mask');plt.savefig(f'plots/bin_mask{opt3}.pdf')
-    # plt.figure();hp.mollview(completeness, title='comp_mask');plt.savefig(f'plots/comp_mask{opt3}.pdf')
-    # plt.figure();plt.hist(completeness[completeness>0], bins=100);plt.savefig(f'plots/comp_hist{opt3}.pdf')
-    # assert(False)
 
 if ap_scale > 0.0:
     ap_mask_c2 = nmt.mask_apodization(completeness, ap_scale, apotype="C2")
@@ -396,7 +386,8 @@ if data_type == 'data':
     if lensing_str=='PR3':
         lensing_alm = hp.read_alm(f'{PATH_p}/MV/dat_klm.fits')
     elif lensing_str=='PR4':
-        lensing_alm = hp.read_alm('/global/cfs/cdirs/cmb/data/planck2020/PR4_lensing/PR4_klm_dat_p.fits')
+        #lensing_alm = hp.read_alm('/global/cfs/cdirs/cmb/data/planck2020/PR4_lensing/PR4_klm_dat_p.fits')
+        lensing_alm = hp.read_alm('inputs/PR4_klm_dat_p.fits')
         lensing_alm[0]=0+0j
     else:
         assert False, "Choose between lensing map PR3 or PR4!"
@@ -417,7 +408,7 @@ if data_type == 'data':
     if not(sys_wts):
         opt = f'{opt}_unw'
 
-    print('read maps and masks',time.time()-t0)
+    print('Read maps and masks:',time.time()-t0, " seconds")
 
     # First field
     f1_ap, fsky1_ap, SN1_ap = get_field(masked_count_dn, ap_mask_c2, numcounts_map, compute_field=compute_field)
@@ -425,7 +416,7 @@ if data_type == 'data':
     f2, fsky2, _ = get_field(lensing_map, mask_pl, compute_field=compute_field)
     print(f'fsky1_ap : {fsky1_ap:.2f}, fsky2 : {fsky2:.2f}')
 
-    print('nmt fields',time.time()-t0)
+    print('Namaster fields',time.time()-t0)
 
     # --------------------------------------------
     # correlations
@@ -451,20 +442,26 @@ if data_type == 'data':
 # theory
 # --------------------------------------------
 if do_cls:
-    clgg_theory_no_SN = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/QSO_maps/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt' )[:,1] 
+    #clgg_theory_no_SN = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/QSO_maps/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt' )[:,1] 
+    clgg_theory_no_SN = np.loadtxt('inputs/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt' )[:,1]
     clgg_SN = 1./(density * (180./np.pi)**2.)
-    clgg_noise = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/QSO_maps/QSO_z0.80_2.10_N__HPmapcut_default_addLIN_nside2048_galactic_DELTA_MAP_BINARY_MASK_nlqq.txt')
+    #clgg_noise = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/QSO_maps/QSO_z0.80_2.10_N__HPmapcut_default_addLIN_nside2048_galactic_DELTA_MAP_BINARY_MASK_nlqq.txt')
+    clgg_noise = np.loadtxt('inputs/QSO_z0.80_2.10_N__HPmapcut_default_addLIN_nside2048_galactic_DELTA_MAP_BINARY_MASK_nlqq.txt')
     clgg_tot = clgg_theory_no_SN + clgg_SN + clgg_noise
 
     # clgg_tot = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/desi_qso_clkg/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt')[:,1]
     clkg = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/QSO_maps/clkg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt')[:,1]
     ells = np.linspace(0,len(clgg_tot)-1, len(clgg_tot)) + 0.5 #TODO: change hardcoded redshift range
 
-    nlkk = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:,1]
-    ells_clkk = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:,0]
-    clkk = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:,2] - nlkk
+    #nlkk = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:,1]
+    nlkk = np.loadtxt('inputs/nlkk.dat')[:,1]
+    #ells_clkk = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:,0]
+    ells_clkk = np.loadtxt('inputs/nlkk.dat')[:,0]
+    #clkk = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:,2] - nlkk
+    clkk = np.loadtxt('inputs/nlkk.dat')[:,2] - nlkk
     # clkk = np.loadtxt('/global/homes/s/sferraro/lensing_pipeline/transfer/PS_for_transfer/clkk_synthetic.txt')
-    clkk_s = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/lensing_pipeline/transfer/PS_for_transfer/clkk_synthetic.txt')
+    #clkk_s = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/lensing_pipeline/transfer/PS_for_transfer/clkk_synthetic.txt')
+    clkk_s = np.loadtxt('inputs/clkk_synthetic.txt')
 
     clgg_tot[0] = 0
 
@@ -472,8 +469,10 @@ if do_cls:
     noise[:4097] = nlkk
     noise[4097:] = nlkk[-1]
     clkktot = np.zeros_like(noise)
-    clkktot[:4097]= np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:4097,2]
-    clkktot[4097:] = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:,2][-1]
+    #clkktot[:4097]= np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:4097,2]
+    clkktot[:4097]= np.loadtxt('inputs/nlkk.dat')[:4097,2]
+    #clkktot[4097:] = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:,2][-1]
+    clkktot[4097:] = np.loadtxt('inputs/nlkk.dat')[:,2][-1]
 
     # bin theory
     bins, lbin, _, _, _, _, _ = get_bins(nside, nb_ells=3*nside, nb_multipoles_per_bins=binsize, nb_ells_removed=compute_lmin)

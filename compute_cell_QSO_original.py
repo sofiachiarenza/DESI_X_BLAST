@@ -24,8 +24,8 @@ PATH_m = '/global/cfs/cdirs/desi/users/akrolew/QSO_maps/' # path for mocks
 PATH_p = '/pscratch/sd/r/rmvd2/CMBxLya/data/COM_Lensing_4096_R3.00/' # path for planck data
 abacus_dir ='/global/cfs/cdirs/desi/users/akrolew/AbacusSummit_huge_c000_ph201_QSO/data/'
 
-PATH_of = '/global/cfs/cdirs/desi/users/akrolew/CMBxQSO/results/plots/'
-PATH_oc = '/global/cfs/cdirs/desi/users/akrolew/CMBxQSO/results/'
+PATH_of = '/global/homes/s/schiaren/CMBxQSO/results/plots'
+PATH_oc = '/global/homes/s/schiaren/CMBxQSO/results'
 
 data_type = str(sys.argv[1])
 
@@ -67,9 +67,9 @@ filter_highell_alm = sys.argv[8].lower() in ['true', '1', 't', 'y', 'yes']
 
 mask_name = sys.argv[9] # N: NGC, S: SGC, A: NGC+SGC
 
-sepnorm = True
+sepnorm = False
 sys_wts = True # if True: data with systematics
-do_cov = True # update theory paths as well
+do_cov = False # update theory paths as well
 compute_cl = True
 compute_coupled_cls = False
 coupled_str=''

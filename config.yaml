@@ -2,8 +2,8 @@
 data_type: data  # Options: 'data', 'mock', or 'abacus'
 
 data:
-  zmin: 2.1
-  zmax: 4.0
+  zmin: 0.8
+  zmax: 2.1
   lensing_str: PR4  # Planck lensing version
   version: v1.5 
   weights: lin #could be 'none', 'lin' or 'rf'    
@@ -24,7 +24,7 @@ abacus:
 mask:
   ap_scale: 0.05    # Apodization scale in degrees
   completeness: 0.00
-  cut_off: 0.00
+  cut_off: 0.20
   mask_name: A      # N: NGC, S: SGC, A: NGC+SGC
 
 # Filtering options
@@ -35,10 +35,10 @@ filter:
 # Computation options
 computation:
   sepnorm: true      # Normalization: separate or global normalization
-  extrasepnorm: false # additionally divide S in S-DES and S-noDES
+  extrasepnorm: true # additionally divide S in S-DES and S-noDES
   sys_wts: true      # Use data with systematics
   do_cls: true 
-  do_cov: true       # Update theory paths
+  do_cov: false       # Update theory paths
   compute_cl: true   # Compute angular power spectrum
   compute_coupled_cls: false
   compute_field: true # Should be true if compute_cl is true

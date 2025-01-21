@@ -2,3 +2,6 @@
 *.png
 *.pdf
 *.DS_Store
+QSO_maps/*
+results/*
+*.pyc

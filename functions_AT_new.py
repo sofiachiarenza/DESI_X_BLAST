@@ -212,10 +212,6 @@ def get_shared_mask_map(mask1, mask2, smoothing_kernel):
 def get_cross_mask_map(mask1, mask2):
     return mask1*mask2
 
-
-
-
-
 def get_field(density, mask, counts=0., compute_field=True):
     if compute_field: f = nmt.NmtField(mask, [density])
     else: f=0
@@ -224,7 +220,7 @@ def get_field(density, mask, counts=0., compute_field=True):
     tot_map = np.sum(counts * mask)
     dens = tot_map/(fsky * 4*np.pi)
     if dens == 0.: dens = 1.
-    SN = 1./dens
+    SN = 1./dens * (180./np.pi)**2.
 
     return f, fsky, SN
 
