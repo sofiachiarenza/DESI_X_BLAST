@@ -35,12 +35,12 @@ filter:
 # Computation options
 computation:
   sepnorm: true      # Normalization: separate or global normalization
-  extrasepnorm: true # additionally divide S in S-DES and S-noDES
+  extrasepnorm: false # additionally divide S in S-DES and S-noDES
   sys_wts: true      # Use data with systematics
   do_cls: true 
   do_cov: false       # Update theory paths
   compute_cl: true   # Compute angular power spectrum
-  compute_coupled_cls: false
+  compute_coupled_cls: true
   compute_field: true # Should be true if compute_cl is true
   lmin: 5
   binsize: 5
