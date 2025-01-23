@@ -20,13 +20,13 @@ print('=== COMPUTE CELL ===')
 nside = 2048
 
 # Paths
-PATH_d = '/global/homes/s/schiaren/CMBxQSO/QSO_maps/' # path for desi data
+PATH_d = '/gpfs/schiarenza/QSO_maps/' # path for desi data
 PATH_m = '/global/cfs/cdirs/desi/users/akrolew/QSO_maps/' # path for mocks
 PATH_p = '/pscratch/sd/r/rmvd2/CMBxLya/data/COM_Lensing_4096_R3.00/' # path for planck data
 abacus_dir = '/global/cfs/cdirs/desi/users/akrolew/AbacusSummit_huge_c000_ph201_QSO/data/'
 
-PATH_of = '/global/homes/s/schiaren/CMBxQSO/results/plots'
-PATH_oc = '/global/homes/s/schiaren/CMBxQSO/results'
+PATH_of = './results/plots'
+PATH_oc = './results'
 
 # Load configuration file
 config_file = 'config.yaml'
@@ -423,20 +423,32 @@ if data_type == 'data':
     # --------------------------------------------
     if compute_cl:
         if compute_coupled_cls:
-            Cl_cross_ap, Cl_auto_gg_ap, Cl_auto_kk, lbin = get_coupled_cells(f1_ap, f2, nside, nb_ells=3*nside, nb_multipoles_per_bins=binsize, nb_ells_removed=compute_lmin, auto1=True, auto2=True, cross=True)
+            Cl_cross_ap, Cl_auto_gg_ap, Cl_auto_kk, lbin = get_coupled_cells(
+                f1_ap, f2, nside, nb_ells=3 * nside, nb_multipoles_per_bins=binsize, 
+                nb_ells_removed=compute_lmin, auto1=True, auto2=True, cross=True
+            )
         else:
-            Cl_cross_ap, Cl_auto_gg_ap, Cl_auto_kk, lbin = get_cells(f1_ap, f2, nside, nb_ells=3*nside, nb_multipoles_per_bins=binsize, nb_ells_removed=compute_lmin, auto1=True, auto2=True, cross=True)
-        print('Correlations',time.time()-t0)
+            Cl_cross_ap, Cl_auto_gg_ap, Cl_auto_kk, lbin = get_cells(
+                f1_ap, f2, nside, nb_ells=3 * nside, nb_multipoles_per_bins=binsize, 
+                nb_ells_removed=compute_lmin, auto1=True, auto2=True, cross=True
+            )
 
-        bins, lbin, _, _, _, _, _ = get_bins(nside, nb_ells=3*nside, nb_multipoles_per_bins=binsize, nb_ells_removed=compute_lmin)
-        sigma_kk = get_gaussian_errors(Cl_auto_kk, Cl_auto_kk, Cl_auto_kk, mask_pl, bins)
-        sigma_kg = get_gaussian_errors(Cl_auto_kk, Cl_auto_gg_ap, Cl_cross_ap, mask_pl*ap_mask_c2, bins)
-        sigma_gg = get_gaussian_errors(Cl_auto_gg_ap, Cl_auto_gg_ap, Cl_auto_gg_ap, ap_mask_c2, bins)
-        print('Gaussian error bars',time.time()-t0)
+        print('Correlations', time.time() - t0, flush=True)
 
-        np.savetxt(f'{PATH_oc}/{coupled_str}Clkg_{mask_name}{opt3}{opt}.txt', np.array([lbin,np.squeeze(Cl_cross_ap), np.squeeze(sigma_kg)]).T)
-        np.savetxt(f'{PATH_oc}/{coupled_str}Clgg_{mask_name}{opt3}{opt}.txt', np.array([lbin,np.squeeze(Cl_auto_gg_ap), np.squeeze(sigma_gg)]).T)
-        np.savetxt(f'{PATH_oc}/{coupled_str}Clkk_{mask_name}{opt1}{opt}.txt', np.array([lbin,np.squeeze(Cl_auto_kk), np.squeeze(sigma_kk)]).T)
+        if compute_coupled_cls:
+            print(len(np.squeeze(Cl_cross_ap)), flush=True)
+            np.savetxt(f'{PATH_oc}/{coupled_str}Clkg_{mask_name}{opt3}{opt}.txt', np.array([np.squeeze(Cl_cross_ap)]).T)
+            np.savetxt(f'{PATH_oc}/{coupled_str}Clgg_{mask_name}{opt3}{opt}.txt', np.array([np.squeeze(Cl_auto_gg_ap)]).T)
+            np.savetxt(f'{PATH_oc}/{coupled_str}Clkk_{mask_name}{opt1}{opt}.txt', np.array([np.squeeze(Cl_auto_kk)]).T)
+        else:
+            bins, lbin, _, _, _, _, _ = get_bins(nside, nb_ells=3*nside, nb_multipoles_per_bins=binsize, nb_ells_removed=compute_lmin)
+            sigma_kk = get_gaussian_errors(Cl_auto_kk, Cl_auto_kk, Cl_auto_kk, mask_pl, bins)
+            sigma_kg = get_gaussian_errors(Cl_auto_kk, Cl_auto_gg_ap, Cl_cross_ap, mask_pl*ap_mask_c2, bins)
+            sigma_gg = get_gaussian_errors(Cl_auto_gg_ap, Cl_auto_gg_ap, Cl_auto_gg_ap, ap_mask_c2, bins)
+            print('Gaussian error bars',time.time()-t0, flush=True)
+            np.savetxt(f'{PATH_oc}/{coupled_str}Clkg_{mask_name}{opt3}{opt}.txt', np.array([lbin,np.squeeze(Cl_cross_ap), np.squeeze(sigma_kg)]).T)
+            np.savetxt(f'{PATH_oc}/{coupled_str}Clgg_{mask_name}{opt3}{opt}.txt', np.array([lbin,np.squeeze(Cl_auto_gg_ap), np.squeeze(sigma_gg)]).T)
+            np.savetxt(f'{PATH_oc}/{coupled_str}Clkk_{mask_name}{opt1}{opt}.txt', np.array([lbin,np.squeeze(Cl_auto_kk), np.squeeze(sigma_kk)]).T)
 
 # --------------------------------------------
 # theory
@@ -450,7 +462,8 @@ if do_cls:
     clgg_tot = clgg_theory_no_SN + clgg_SN + clgg_noise
 
     # clgg_tot = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/desi_qso_clkg/clgg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt')[:,1]
-    clkg = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/QSO_maps/clkg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt')[:,1]
+    #clkg = np.loadtxt(f'/global/cfs/cdirs/desi/users/akrolew/QSO_maps/clkg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt')[:,1]
+    clkg = np.loadtxt(f'inputs/clkg_desi_quasars_QSO_z0.80_2.10_NGC__HPmapcut_default.txt')[:,1]
     ells = np.linspace(0,len(clgg_tot)-1, len(clgg_tot)) + 0.5 #TODO: change hardcoded redshift range
 
     #nlkk = np.loadtxt('/global/cfs/cdirs/desi/users/akrolew/unWISE/PLANCK_LENSING/COM_Lensing_4096_R3.00/MV/nlkk.dat')[:,1]

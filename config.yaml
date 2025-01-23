@@ -6,7 +6,7 @@ data:
   zmax: 2.1
   lensing_str: PR4  # Planck lensing version
   version: v1.5 
-  weights: lin #could be 'none', 'lin' or 'rf'    
+  weights: none #could be 'none', 'lin' or 'rf'    
 
 mock:
   i_min: 0          # First mock index
@@ -40,7 +40,7 @@ computation:
   do_cls: true 
   do_cov: false       # Update theory paths
   compute_cl: true   # Compute angular power spectrum
-  compute_coupled_cls: true
+  compute_coupled_cls: false
   compute_field: true # Should be true if compute_cl is true
   lmin: 5
   binsize: 5

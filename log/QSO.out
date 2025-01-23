@@ -1,0 +1,24 @@
+=== COMPUTE CELL ===
+use Planck PR4
+REGION:           A
+apo scale (deg):  0.05
+cut off mask:     0.2
+data set :        desi_dr1_0.80_z_2.10_PR4_PR4mask
+completeness:     0.0
+nside:            2048
+systematics:      True
+opt:              _v1.5_lmax6144_mapC2s0.05_comp0.0_cutoff0.2_desi_dr1_0.80_z_2.10_PR4_PR4mask_lmin5_binsize5_sepnormTrue_old_default
+lmin for Cell:    5
+binsize:          5
+
+
+Density:  123.54128009993133  gal/deg^2
+Read maps and masks: 11.884617805480957  seconds
+fsky1_ap : 0.17, fsky2 : 0.67
+Namaster fields 31.699764013290405
+Correlations 161.6710340976715
+fsky = 0.6706296602884928 fsky_cov = 0.6706296602884928
+fsky = 0.15877359485500245 fsky_cov = 0.12668520077300283
+fsky = 0.1673646723424248 fsky_cov = 0.13333084038973914
+Gaussian error bars 163.57518219947815
+save theory Cl

@@ -1,0 +1,12 @@
+/home/schiarenza/DESI_X_BLAST/compute_cell_QSO_new.py:249: RuntimeWarning: divide by zero encountered in divide
+  masked_count = numcounts_map / completeness * bin_mask
+/home/schiarenza/DESI_X_BLAST/compute_cell_QSO_new.py:249: RuntimeWarning: invalid value encountered in divide
+  masked_count = numcounts_map / completeness * bin_mask
+/home/schiarenza/DESI_X_BLAST/compute_cell_QSO_new.py:249: RuntimeWarning: invalid value encountered in multiply
+  masked_count = numcounts_map / completeness * bin_mask
+/home/schiarenza/DESI_X_BLAST/compute_cell_QSO_new.py:288: RuntimeWarning: divide by zero encountered in divide
+  masked_count = numcounts_map / completeness * bin_mask
+/home/schiarenza/DESI_X_BLAST/compute_cell_QSO_new.py:288: RuntimeWarning: invalid value encountered in divide
+  masked_count = numcounts_map / completeness * bin_mask
+/home/schiarenza/DESI_X_BLAST/compute_cell_QSO_new.py:288: RuntimeWarning: invalid value encountered in multiply
+  masked_count = numcounts_map / completeness * bin_mask

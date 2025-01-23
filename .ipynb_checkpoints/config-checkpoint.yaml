@@ -1,0 +1,47 @@
+# Data type and related configuration
+data_type: data  # Options: 'data', 'mock', or 'abacus'
+
+data:
+  zmin: 0.8
+  zmax: 2.1
+  lensing_str: PR4  # Planck lensing version
+  version: v1.5 
+  weights: none #could be 'none', 'lin' or 'rf'    
+
+mock:
+  i_min: 0          # First mock index
+  i_max: 50         # Last mock index
+  version: v1.5     # Version for mock data
+  mock_version: _v2 # Specific version for mocks
+  add_nlqq: true    # Include noise in Gaussian mocks
+
+abacus:
+  i_min: 0          # First Abacus mock index
+  i_max: 100        # Last Abacus mock index
+  version: v1.5     # Version for Abacus mocks
+
+# Masking and completeness
+mask:
+  ap_scale: 0.05    # Apodization scale in degrees
+  completeness: 0.00
+  cut_off: 0.20
+  mask_name: A      # N: NGC, S: SGC, A: NGC+SGC
+
+# Filtering options
+filter:
+  lowell_alm: false  # Filter out low ells
+  highell_alm: false # Filter out high ells
+
+# Computation options
+computation:
+  sepnorm: true      # Normalization: separate or global normalization
+  extrasepnorm: false # additionally divide S in S-DES and S-noDES
+  sys_wts: true      # Use data with systematics
+  do_cls: true 
+  do_cov: false       # Update theory paths
+  compute_cl: true   # Compute angular power spectrum
+  compute_coupled_cls: false
+  compute_field: true # Should be true if compute_cl is true
+  lmin: 5
+  binsize: 5
+      
